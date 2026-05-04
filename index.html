@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="theme-color" content="#0E0702">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>AncestralMind</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ── Backgrounds ── */
+  --bd:#0E0702;--bc:#1C0D06;--bp:#261208;--bm:#160A04;
+  /* ── Gold palette ── */
+  --go:#F0A818;--gl:#FFD040;--gd:#E09010;
+  /* ── Text hierarchy ── */
+  --cr:#FEFAF2;       /* primary — near white warm */
+  --cs:#FFD878;       /* secondary — bright sunlight gold */
+  --cd:#E0B870;       /* tertiary — warm amber, always readable */
+  /* ── AI purple ── */
+  --ai:#7040B8;--al:#C080FF;--ag:rgba(112,64,184,0.45);
+  /* ── Teal ── */
+  --tl:#1A6868;--tll:#40EEE4;--tg:rgba(64,238,228,0.28);
+  /* ── Borders ── */
+  --br:rgba(240,168,24,0.30);--bb:rgba(240,168,24,0.70);
+  /* ── Fonts ── */
+  --fd:'Cinzel',serif;--fh:'Playfair Display',serif;--fb:'Lora',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#0E0702;background-color:#0E0702;color-scheme:dark}
+body{background:#0E0702;background-color:#0E0702;color:#FEFAF2;color:var(--cr);font-family:var(--fb);font-size:15px;min-height:100vh;min-height:-webkit-fill-available;overflow-x:hidden}
+.bfree{display:inline-flex;align-items:center;gap:3px;background:rgba(64,238,228,0.15);border:1px solid rgba(64,238,228,0.55);color:var(--tll);padding:3px 9px;border-radius:20px;font-size:10px;font-family:var(--fd);letter-spacing:1px;white-space:nowrap;font-weight:600}
+.bfree::before{content:'✓';font-size:9px}
+.bai{display:inline-flex;align-items:center;gap:3px;background:rgba(192,128,255,0.18);border:1px solid rgba(192,128,255,0.6);color:var(--al);padding:3px 9px;border-radius:20px;font-size:10px;font-family:var(--fd);letter-spacing:1px;white-space:nowrap;font-weight:600}
+.bai::before{content:'✦';font-size:8px}
+/* LEGEND */
+.flg{margin:0 16px 18px;border-radius:12px;overflow:hidden;border:1px solid var(--br);background:#1C0D06}
+.lhdr{background:#261208;padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--br);font-family:var(--fd);font-size:11px;letter-spacing:2px;color:var(--gl);text-transform:uppercase}
+.lcols{display:grid;grid-template-columns:1fr 1fr}
+.lcol{padding:14px 14px;background:#1C0D06}
+.lcol.fc{border-right:1px solid var(--br);border-top:2px solid #40EEE4}
+.lcol.ac{border-top:2px solid #C080FF}
+.lct{font-family:var(--fd);font-size:10px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.fc .lct{color:#40EEE4}.ac .lct{color:#C080FF}
+.li{font-size:13px;color:#FFD878;padding:4px 0;display:flex;align-items:flex-start;gap:6px;line-height:1.5}
+.fc .li::before{content:'•';color:#40EEE4;flex-shrink:0}.ac .li::before{content:'•';color:#C080FF;flex-shrink:0}
+/* ZONES */
+.az{position:relative;border:1px solid rgba(192,128,255,0.45);border-radius:14px;margin:12px 0;background:linear-gradient(135deg,rgba(112,64,184,0.10),rgba(112,64,184,0.03));overflow:hidden}
+.az::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--al),transparent)}
+.azl{padding:9px 14px 0;display:flex;align-items:center;gap:8px;font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--al);text-transform:uppercase;font-weight:600}
+.azb{padding:10px 14px 14px}
+.fz{position:relative;border:1px solid rgba(64,238,228,0.38);border-radius:14px;margin:12px 0;background:linear-gradient(135deg,rgba(64,238,228,0.07),rgba(64,238,228,0.02));overflow:hidden}
+.fz::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--tll),transparent)}
+.fzl{padding:9px 14px 0;display:flex;align-items:center;gap:8px;font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--tll);text-transform:uppercase;font-weight:600}
+.fzb{padding:10px 14px 14px}
+/* AI GATE */
+.aig{text-align:center;padding:24px 16px}
+.aig-i{font-size:36px;margin-bottom:10px}
+.aig-t{font-family:var(--fd);font-size:16px;color:var(--al);letter-spacing:1px;margin-bottom:8px}
+.aig-d{font-size:14px;color:var(--cs);font-style:italic;line-height:1.8;margin-bottom:14px}
+.aig-fs{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;text-align:left;max-width:240px;margin-left:auto;margin-right:auto}
+.aig-f{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--cr)}
+.ubtn{width:100%;padding:13px;background:linear-gradient(135deg,var(--ai),#4A2070);border:none;border-radius:12px;color:white;font-family:var(--fd);font-size:13px;letter-spacing:1px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 20px var(--ag)}
+/* TOPBAR */
+.tb{position:sticky;top:0;z-index:100;background:#0E0702;background:linear-gradient(180deg,#0E0702 80%,transparent);padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--br)}
+.lw{display:flex;align-items:center;gap:10px;cursor:pointer}
+.li2{width:36px;height:36px;background:radial-gradient(circle at 40% 40%,var(--gl),var(--go));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 12px rgba(201,149,42,0.5)}
+.lt{font-family:var(--fd);font-size:16px;color:var(--gl);letter-spacing:1px}
+.ls{font-size:9px;color:var(--cs);letter-spacing:2px;text-transform:uppercase}
+.apib{background:none;border:1px solid rgba(208,160,48,0.4);color:var(--cs);padding:6px 12px;border-radius:20px;font-size:10px;cursor:pointer;font-family:var(--fb);transition:all 0.2s}
+.apib:hover{border-color:var(--go);color:var(--go)}
+.apib.conn{border-color:rgba(176,126,224,0.7);color:var(--al)}
+.scr{display:none;padding:0 0 100px;background:#0E0702;background:var(--bd)}.scr.act{display:block}
+/* HOME */
+.hero{padding:28px 20px 18px;text-align:center;position:relative;overflow:hidden;background:#0E0702;background:var(--bd)}
+.hero::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(201,149,42,0.1) 0%,transparent 70%);pointer-events:none}
+.ht{font-family:var(--fd);font-size:28px;color:var(--gl);letter-spacing:2px;margin-bottom:10px;text-shadow:0 2px 24px rgba(255,208,64,0.5)}
+.hs{font-family:var(--fh);font-style:italic;font-size:15px;color:var(--cs);max-width:300px;margin:0 auto 18px;line-height:1.85}
+.do{display:flex;align-items:center;gap:12px;margin:0 auto 18px;width:fit-content}
+.do::before,.do::after{content:'';width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--gd))}
+.do::after{background:linear-gradient(270deg,transparent,var(--gd))}
+.do span{color:var(--go);font-size:16px}
+.sl{padding:0 20px 12px;font-family:var(--fd);font-size:11px;letter-spacing:3px;color:var(--go);text-transform:uppercase}
+.ag2{padding:0 16px;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+/* ANCESTOR CARDS */
+.ac2{background:#1C0D06;background:var(--bc);border:1px solid var(--br);border-radius:14px;padding:18px 14px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;animation:fadeUp 0.4s ease both}
+.ac2:hover{border-color:var(--bb);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+.aav{width:64px;height:64px;border-radius:50%;margin:0 auto 12px;border:2px solid var(--bb);overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bp);box-shadow:0 0 16px rgba(201,149,42,0.2);position:relative}
+.aav img{width:100%;height:100%;object-fit:cover}.aav .ini{font-family:var(--fd);font-size:22px;color:var(--go)}
+.eb{position:absolute;bottom:-2px;right:-2px;background:var(--ai);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;border:2px solid var(--bd)}
+.an{font-family:var(--fh);font-size:16px;font-weight:700;text-align:center;color:var(--cr);margin-bottom:5px}
+.ar{font-size:11px;color:var(--cs);text-align:center;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.ay{font-size:12px;color:var(--cd);text-align:center;font-style:italic}
+.abd{position:absolute;top:10px;right:10px;background:rgba(240,168,24,0.18);border:1px solid var(--br);border-radius:20px;padding:2px 8px;font-size:11px;color:var(--gl)}
+.aac{border:1px dashed rgba(64,238,228,0.38);border-radius:14px;padding:18px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:160px;transition:all 0.2s}
+.aac:hover{border-color:var(--tll);background:rgba(64,238,228,0.06)}
+.aac .pl{font-size:28px;color:var(--tll)}.aac span{font-size:12px;color:var(--cs);font-family:var(--fd);letter-spacing:1px}
+/* DETAIL */
+.dh{position:relative;background:linear-gradient(180deg,var(--bp) 0%,var(--bd) 100%);padding:20px 20px 24px;text-align:center;border-bottom:1px solid var(--br)}
+.bbtn{position:absolute;top:18px;left:16px;background:none;border:none;cursor:pointer;color:var(--go);font-size:20px;padding:4px}
+.ebtn{position:absolute;top:18px;right:16px;background:none;border:1px solid var(--br);border-radius:8px;cursor:pointer;color:var(--cs);font-size:11px;padding:5px 10px;font-family:var(--fb);transition:all 0.2s}
+.ebtn:hover{border-color:var(--go);color:var(--go)}
+.dav{width:90px;height:90px;border-radius:50%;margin:0 auto 12px;border:3px solid var(--go);overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bc);box-shadow:0 0 30px rgba(201,149,42,0.3)}
+.dav img{width:100%;height:100%;object-fit:cover}.dav .ini{font-family:var(--fd);font-size:30px;color:var(--go)}
+.dn{font-family:var(--fd);font-size:22px;color:var(--gl);letter-spacing:1px;margin-bottom:5px}
+.dr{font-size:13px;color:var(--cs);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.dy{font-size:13px;color:var(--cd);font-style:italic;margin-bottom:10px}
+.dd{font-size:14px;color:var(--cr);font-style:italic;line-height:1.9;max-width:320px;margin:0 auto}
+.esS{margin:12px 16px 0;background:linear-gradient(135deg,rgba(112,64,184,0.15),rgba(112,64,184,0.05));border:1px solid rgba(192,128,255,0.4);border-radius:10px;padding:14px 16px;font-size:14px;font-style:italic;color:var(--cr);line-height:1.9;position:relative}
+.esS::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--al),transparent)}
+.esL{font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--al);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.esgb{display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 32px);margin:10px 16px 0;padding:11px;background:rgba(112,64,184,0.12);border:1px dashed rgba(192,128,255,0.45);border-radius:8px;color:var(--al);font-size:13px;cursor:pointer;font-family:var(--fb);transition:all 0.2s}
+.esgb:hover{background:rgba(112,64,184,0.22)}
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--br);padding:0 16px;gap:4px}
+.tbtn{padding:10px 13px;background:none;border:none;border-bottom:2px solid transparent;color:var(--cd);font-size:13px;font-family:var(--fb);cursor:pointer;transition:all 0.2s;margin-bottom:-1px;display:flex;align-items:center;gap:5px}
+.tbtn.act{color:var(--gl);border-bottom-color:var(--go)}
+.tda{width:6px;height:6px;border-radius:50%;background:var(--al);flex-shrink:0}
+.tdf{width:6px;height:6px;border-radius:50%;background:var(--tll);flex-shrink:0}
+.tc{display:none;padding:14px 16px}.tc.act{display:block}
+/* WISDOM */
+.awb{width:100%;padding:13px;background:rgba(64,238,228,0.09);border:1px solid rgba(64,238,228,0.40);border-radius:10px;cursor:pointer;color:var(--tll);font-size:14px;font-family:var(--fb);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+.awb:hover{background:rgba(64,238,228,0.17)}
+.we{background:var(--bc);border:1px solid var(--br);border-radius:12px;padding:16px;margin-bottom:12px;position:relative;animation:fadeUp 0.3s ease both}
+.wty{font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--cs);text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:6px;font-weight:600}
+.wty::after{content:'';flex:1;height:1px;background:var(--br)}
+.wtx{font-size:15px;line-height:1.9;color:var(--cr);font-style:italic}
+.wim{width:100%;border-radius:8px;margin-bottom:10px;max-height:200px;object-fit:cover;cursor:pointer}
+.wim.enh{border:2px solid var(--al)}
+.wdt{font-size:12px;color:var(--cd);margin-top:10px}
+.wdl{position:absolute;top:12px;right:12px;background:none;border:none;cursor:pointer;color:var(--cd);font-size:14px;opacity:0.6;transition:opacity 0.2s}
+.wdl:hover{opacity:1;color:#ff6060}
+/* CHAT */
+.oi{text-align:center;padding:14px 10px 12px}
+.oii{font-size:34px;margin-bottom:6px}
+.oit{font-size:14px;color:var(--cs);font-style:italic;line-height:1.8}
+.cms{display:flex;flex-direction:column;gap:14px;margin-bottom:14px;min-height:80px}
+.bu{max-width:85%;padding:13px 16px;border-radius:16px;font-size:14px;line-height:1.85;animation:fadeUp 0.3s ease}
+.bu.user{align-self:flex-end;background:linear-gradient(135deg,rgba(240,168,24,0.28),rgba(240,168,24,0.16));border:1px solid var(--bb);border-bottom-right-radius:4px;color:var(--cr)}
+.bu.anc{align-self:flex-start;background:linear-gradient(135deg,rgba(112,64,184,0.18),var(--bc));border:1px solid rgba(192,128,255,0.35);border-bottom-left-radius:4px;font-style:italic;color:var(--cr);position:relative}
+.bu.anc::before{content:'"';position:absolute;top:-4px;left:8px;font-size:32px;color:rgba(192,128,255,0.4);font-family:var(--fh);line-height:1}
+.acn{font-family:var(--fd);font-size:10px;letter-spacing:1px;color:var(--al);margin-bottom:6px;text-transform:uppercase;font-weight:600}
+.cr2{display:flex;gap:10px;align-items:flex-end;position:sticky;bottom:16px;background:var(--bd);padding:4px 0}
+.ci{flex:1;background:var(--bc);border:1px solid rgba(192,128,255,0.35);border-radius:12px;padding:12px 14px;color:var(--cr);font-family:var(--fb);font-size:14px;resize:none;min-height:48px;max-height:120px;outline:none;transition:border-color 0.2s;line-height:1.5}
+.ci:focus{border-color:var(--al)}.ci::placeholder{color:var(--cd);opacity:0.9}
+.cs{width:48px;height:48px;background:linear-gradient(135deg,var(--ai),#4A2570);border:none;border-radius:12px;cursor:pointer;font-size:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:white;transition:all 0.2s}
+.cs:hover{transform:scale(1.05)}.cs:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.typ{display:flex;gap:5px;align-items:center;padding:4px 0}
+.td2{width:7px;height:7px;border-radius:50%;background:var(--al);animation:tPulse 1.2s infinite}
+.td2:nth-child(2){animation-delay:0.2s}.td2:nth-child(3){animation-delay:0.4s}
+/* GALLERY */
+.gg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.gi{aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--br);cursor:pointer;position:relative}
+.gi img{width:100%;height:100%;object-fit:cover;transition:filter 0.2s}
+.gi.enh{border-color:var(--al)}
+.gi .em{position:absolute;bottom:4px;right:4px;background:var(--ai);border-radius:10px;font-size:9px;padding:1px 5px;color:white;font-family:var(--fd)}
+/* MODALS */
+.mo{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.mo.op{display:flex}
+.md{background:#160A04;background:var(--bm);border:1px solid var(--br);border-radius:20px 20px 0 0;padding:20px 20px 40px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;animation:slideUp 0.3s ease}
+.mh{width:40px;height:4px;background:var(--br);border-radius:2px;margin:0 auto 18px}
+.mt{font-family:var(--fd);font-size:16px;color:var(--gl);letter-spacing:1px;margin-bottom:18px;text-align:center}
+.mf{border-left:3px solid var(--tll);padding-left:12px;margin-bottom:18px}
+.mai{border-left:3px solid var(--al);padding-left:12px;margin-bottom:18px;background:rgba(112,64,184,0.08);border-radius:0 8px 8px 0;padding:12px 12px 12px 14px}
+.msl{font-family:var(--fd);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:11px;display:flex;align-items:center;gap:6px;font-weight:600}
+.mf .msl{color:var(--tll)}.mai .msl{color:var(--al)}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:11px;letter-spacing:1.5px;color:var(--go);text-transform:uppercase;font-family:var(--fd);margin-bottom:8px;font-weight:600}
+.fi,.fss,.fta{width:100%;background:rgba(255,248,235,0.06);border:1px solid rgba(240,168,24,0.38);border-radius:10px;padding:12px 14px;color:var(--cr);font-family:var(--fb);font-size:14px;outline:none;transition:all 0.2s}
+.fi:focus,.fss:focus,.fta:focus{border-color:var(--go)}
+.fta{resize:vertical;min-height:90px;line-height:1.6}.fss{appearance:none;cursor:pointer}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ua{border:2px dashed rgba(240,168,24,0.38);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.ua:hover{border-color:var(--go);background:rgba(240,168,24,0.07)}
+.ua img.pv{width:70px;height:70px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:block}
+.ua input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.ui{font-size:26px;color:var(--go);margin-bottom:6px}.ut{font-size:12px;color:var(--cs)}
+.wtg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.wtb{padding:10px 6px;background:var(--bc);border:1px solid var(--br);border-radius:8px;cursor:pointer;text-align:center;transition:all 0.2s}
+.wtb.sl2{border-color:var(--tll);background:rgba(78,205,196,0.1)}
+.wtb .ti{font-size:18px;display:block;margin-bottom:4px}.wtb .tl{font-size:11px;color:var(--cs);font-family:var(--fd);letter-spacing:0.5px;font-weight:600}
+.extb{width:100%;padding:11px;background:rgba(108,63,160,0.1);border:1px solid rgba(155,111,208,0.4);border-radius:10px;cursor:pointer;color:var(--al);font-size:12px;font-family:var(--fb);letter-spacing:0.5px;margin-top:10px;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.extb:hover{background:rgba(108,63,160,0.2)}.extb:disabled,.ehb:disabled{opacity:0.4;cursor:not-allowed}
+.bp2{width:100%;padding:13px;background:linear-gradient(135deg,var(--go),#8A6010);border:none;border-radius:12px;color:#0E0702;font-family:var(--fd);font-size:13px;letter-spacing:1px;cursor:pointer;margin-top:8px;transition:all 0.2s;font-weight:700}
+.bp2:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,149,42,0.4)}.bp2:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.bs{width:100%;padding:11px;background:none;border:1px solid rgba(208,160,48,0.35);border-radius:12px;color:var(--cs);font-family:var(--fb);font-size:13px;cursor:pointer;margin-top:8px;transition:all 0.2s}
+.bs:hover{border-color:var(--go);color:var(--cr)}
+.an2{font-size:13px;color:var(--cs);line-height:1.8;margin-bottom:16px}.an2 a{color:var(--gl);text-decoration:none}
+/* ═══ ENHANCE MODAL ═══ */
+.baw{position:relative;width:100%;border-radius:12px;overflow:hidden;background:#111;margin-bottom:12px;touch-action:none;user-select:none}
+.bab,.baa{position:absolute;top:0;left:0;width:100%;height:100%}
+.bab img,.baa img{width:100%;height:100%;object-fit:contain;display:block}
+.baa{clip-path:inset(0 50% 0 0)}
+.bad{position:absolute;top:0;bottom:0;width:2px;background:white;left:50%;transform:translateX(-50%);cursor:ew-resize;z-index:10}
+.bad::before{content:'◀ ▶';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;color:#333;padding:4px 8px;border-radius:20px;font-size:11px;white-space:nowrap;font-weight:bold}
+.balbL{position:absolute;top:8px;left:10px;background:rgba(0,0,0,0.6);color:white;padding:3px 8px;border-radius:10px;font-size:10px;font-family:var(--fd);letter-spacing:1px;z-index:5}
+.balbR{position:absolute;top:8px;right:10px;background:rgba(108,63,160,0.8);color:white;padding:3px 8px;border-radius:10px;font-size:10px;font-family:var(--fd);letter-spacing:1px;z-index:5}
+.ds{background:rgba(240,168,24,0.08);border:1px solid var(--br);border-radius:10px;padding:11px 14px;margin-bottom:12px;font-size:13px;line-height:1.7;color:var(--cr)}
+.dr2{display:flex;align-items:center;gap:8px;margin-bottom:4px}.dr2:last-child{margin-bottom:0}
+.dp{padding:2px 8px;border-radius:10px;font-size:10px;font-family:var(--fd)}
+.dp.w{background:rgba(230,100,0,0.2);border:1px solid rgba(230,100,0,0.5);color:#E09040}
+.dp.ok{background:rgba(78,205,196,0.15);border:1px solid rgba(78,205,196,0.4);color:var(--tll)}
+.dp.bw{background:rgba(108,63,160,0.2);border:1px solid rgba(155,111,208,0.5);color:var(--al)}
+.eas{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.ehb{padding:10px 8px;border:1px solid rgba(240,168,24,0.32);border-radius:10px;cursor:pointer;font-size:12px;font-family:var(--fb);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--bc);color:var(--cs);font-weight:600}
+.ehb:hover:not(:disabled){border-color:var(--go);color:var(--gl);background:rgba(208,160,48,0.10)}
+.ehb.aib{border-color:rgba(155,111,208,0.4);color:var(--al);background:rgba(108,63,160,0.08)}
+.ehb.aib:hover:not(:disabled){background:rgba(108,63,160,0.2);border-color:var(--al)}
+.ehb.actv{border-color:var(--go);background:rgba(201,149,42,0.15);color:var(--go)}
+.cp{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0}
+.cc{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);cursor:pointer;flex-shrink:0;transition:transform 0.15s}
+.cc:hover{transform:scale(1.2)}
+.ccl{font-size:10px;color:var(--cs)}
+.spb{width:100%;padding:13px;background:linear-gradient(135deg,#2E7D32,#1B5E20);border:none;border-radius:12px;color:white;font-family:var(--fd);font-size:13px;letter-spacing:1px;cursor:pointer;margin-top:8px;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.spb:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(46,125,50,0.4)}
+.upb{width:100%;padding:13px;background:linear-gradient(135deg,var(--go),#8A6010);border:none;border-radius:12px;color:#0E0702;font-family:var(--fd);font-size:13px;letter-spacing:1px;cursor:pointer;margin-top:8px;transition:all 0.2s;font-weight:700}
+.upb:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,149,42,0.4)}
+.pb{width:100%;height:4px;background:var(--bc);border-radius:2px;overflow:hidden;margin:8px 0}
+.pf{height:100%;background:linear-gradient(90deg,var(--ai),var(--al));border-radius:2px;transition:width 0.3s;width:0%}
+/* MISC */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bp);border:1px solid var(--bb);color:var(--cr);padding:11px 20px;border-radius:30px;font-size:13px;z-index:999;transition:transform 0.3s;white-space:nowrap;max-width:90vw;box-shadow:0 8px 40px rgba(0,0,0,0.7)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:rgba(78,205,196,0.5);color:var(--tll)}
+.toast.error{border-color:rgba(200,60,60,0.5);color:#E07080}
+.toast.ai{border-color:rgba(155,111,208,0.5);color:var(--al)}
+.fab{position:fixed;bottom:24px;right:20px;width:52px;height:52px;border:none;border-radius:50%;cursor:pointer;font-size:22px;transition:all 0.2s;z-index:50;display:none;align-items:center;justify-content:center}
+.fab.vis{display:flex}.fab.fm{background:linear-gradient(135deg,var(--tll),var(--tl));box-shadow:0 6px 24px var(--tg);color:#120A04}
+.fab.am{background:linear-gradient(135deg,var(--al),var(--ai));box-shadow:0 6px 24px var(--ag);color:white}
+.fab:hover{transform:scale(1.08)}
+.empty{text-align:center;padding:32px 20px;color:var(--cs)}
+.empty .ei{font-size:36px;margin-bottom:10px}
+.empty p{font-size:14px;font-style:italic;line-height:1.9;color:var(--cs)}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(155,111,208,0.3);border-top-color:var(--al);border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle}
+.lb{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.95);align-items:center;justify-content:center}
+.lb.op{display:flex}.lb img{max-width:95vw;max-height:90vh;border-radius:8px;object-fit:contain}
+.lbc{position:absolute;top:20px;right:20px;background:none;border:none;color:white;font-size:28px;cursor:pointer}
+canvas{display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes tPulse{0%,60%,100%{transform:translateY(0);opacity:0.5}30%{transform:translateY(-5px);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* ── ONBOARDING ── */
+.ob-scr{padding:0 0 40px;animation:fadeUp 0.5s ease}
+.ob-hero{text-align:center;padding:36px 24px 28px;position:relative;overflow:hidden}
+.ob-hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:360px;height:360px;background:radial-gradient(circle,rgba(240,168,24,0.13) 0%,transparent 70%);pointer-events:none}
+.ob-flame{font-size:52px;margin-bottom:14px;display:block;filter:drop-shadow(0 0 20px rgba(240,168,24,0.6))}
+.ob-title{font-family:var(--fd);font-size:28px;color:var(--gl);letter-spacing:2px;margin-bottom:10px;text-shadow:0 2px 24px rgba(255,208,64,0.5);line-height:1.2}
+.ob-sub{font-family:var(--fh);font-style:italic;font-size:15px;color:var(--cs);line-height:1.85;max-width:320px;margin:0 auto 28px}
+.ob-steps{padding:0 20px;margin-bottom:24px}
+.ob-step{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;background:var(--bc);border:1px solid var(--br);border-radius:12px;margin-bottom:10px;animation:fadeUp 0.4s ease both}
+.ob-step:nth-child(2){animation-delay:0.08s}.ob-step:nth-child(3){animation-delay:0.16s}.ob-step:nth-child(4){animation-delay:0.24s}
+.ob-step-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:13px;font-weight:700;flex-shrink:0;margin-top:2px}
+.ob-step-num.free{background:rgba(64,238,228,0.15);border:1.5px solid rgba(64,238,228,0.5);color:var(--tll)}
+.ob-step-num.ai{background:rgba(192,128,255,0.15);border:1.5px solid rgba(192,128,255,0.5);color:var(--al)}
+.ob-step-body{}
+.ob-step-title{font-family:var(--fd);font-size:13px;color:var(--cr);letter-spacing:0.5px;margin-bottom:4px;font-weight:600}
+.ob-step-desc{font-size:13px;color:var(--cs);line-height:1.6}
+.ob-actions{padding:0 20px;display:flex;flex-direction:column;gap:10px}
+.ob-cta{width:100%;padding:16px;background:linear-gradient(135deg,var(--go),#B07010);border:none;border-radius:14px;color:#0E0702;font-family:var(--fd);font-size:14px;letter-spacing:1.5px;cursor:pointer;transition:all 0.2s;font-weight:700;box-shadow:0 6px 24px rgba(240,168,24,0.35)}
+.ob-cta:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(240,168,24,0.45)}
+.ob-sample{width:100%;padding:14px;background:rgba(64,238,228,0.08);border:1.5px solid rgba(64,238,228,0.40);border-radius:14px;color:var(--tll);font-family:var(--fd);font-size:13px;letter-spacing:1px;cursor:pointer;transition:all 0.2s;font-weight:600}
+.ob-sample:hover{background:rgba(64,238,228,0.15);border-color:var(--tll)}
+.ob-divider{display:flex;align-items:center;gap:12px;padding:4px 0}
+.ob-divider::before,.ob-divider::after{content:'';flex:1;height:1px;background:var(--br)}
+.ob-divider span{font-size:11px;color:var(--cd);font-family:var(--fd);letter-spacing:1px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--gd);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="tb">
+  <div class="lw" onclick="goHome()">
+    <div class="li2">🕯️</div>
+    <div><div class="lt">AncestralMind</div><div class="ls">Living Family Wisdom</div></div>
+  </div>
+  <button class="apib" id="apiBtn" onclick="openMo('apiMo')">✦ AI Setup</button>
+</div>
+
+<!-- HOME -->
+<div class="scr act" id="homeScr">
+  <!-- Onboarding (shown when no ancestors) -->
+  <div id="obView" style="display:none">
+    <div class="ob-hero">
+      <span class="ob-flame">🕯️</span>
+      <div class="ob-title">AncestralMind</div>
+      <div class="ob-sub">Your family's wisdom, preserved forever. Let the voices of those who came before guide you still.</div>
+    </div>
+    <div class="ob-steps">
+      <div class="ob-step">
+        <div class="ob-step-num free">1</div>
+        <div class="ob-step-body">
+          <div class="ob-step-title">Add an Ancestor</div>
+          <div class="ob-step-desc">Create a profile with their name, photo, years, and the values that defined them.</div>
+        </div>
+      </div>
+      <div class="ob-step">
+        <div class="ob-step-num free">2</div>
+        <div class="ob-step-body">
+          <div class="ob-step-title">Record Their Wisdom</div>
+          <div class="ob-step-desc">Add stories, sayings, life lessons, beliefs — anything that captures who they were. Upload old photos or handwritten letters.</div>
+        </div>
+      </div>
+      <div class="ob-step">
+        <div class="ob-step-num ai">3</div>
+        <div class="ob-step-body">
+          <div class="ob-step-title">Talk to Them — Powered by AI</div>
+          <div class="ob-step-desc">Connect your Anthropic API key and have real conversations. Ask for guidance. Their wisdom answers back.</div>
+        </div>
+      </div>
+      <div class="ob-step">
+        <div class="ob-step-num ai">4</div>
+        <div class="ob-step-body">
+          <div class="ob-step-title">Restore Old Photos with AI</div>
+          <div class="ob-step-desc">Auto-fix blur, enhance faded photos, and colorize black & white images with historically accurate colors.</div>
+        </div>
+      </div>
+    </div>
+    <div class="ob-actions">
+      <button class="ob-cta" onclick="openAddAncMo()">🕯️ Add Your First Ancestor</button>
+      <div class="ob-divider"><span>or explore first</span></div>
+      <button class="ob-sample" onclick="loadSampleAncestor()">👁 Load a Sample Ancestor</button>
+    </div>
+  </div>
+  <!-- Ancestor grid (shown when ancestors exist) -->
+  <div id="gridView" style="display:none">
+    <div class="hero">
+      <div class="ht">Your Family Oracle</div>
+      <div class="hs">Preserve the wisdom of those who came before. Let their voices guide you still.</div>
+      <div class="do"><span>✦</span></div>
+    </div>
+    <div class="flg">
+      <div class="lhdr">🗺 Feature Map — Free vs AI Powered</div>
+      <div class="lcols">
+        <div class="lcol fc">
+          <div class="lct"><span class="bfree">FREE</span></div>
+          <div class="li">Add ancestors & profiles</div>
+          <div class="li">Record stories & sayings</div>
+          <div class="li">Upload photos & letters</div>
+          <div class="li">Auto sharpen & enhance</div>
+          <div class="li">Blur detection & fix</div>
+          <div class="li">Gallery & wisdom vault</div>
+        </div>
+        <div class="lcol ac">
+          <div class="lct"><span class="bai">AI POWERED</span></div>
+          <div class="li">AI colorizes B&W photos</div>
+          <div class="li">AI reads old letters</div>
+          <div class="li">Talk to your ancestor</div>
+          <div class="li">AI describes photos</div>
+          <div class="li">Life philosophy summary</div>
+          <div class="li">Needs Anthropic API key</div>
+        </div>
+      </div>
+    </div>
+    <div class="sl">Ancestors</div>
+    <div class="ag2" id="ancGrid"></div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="scr" id="detScr">
+  <div class="dh" id="detHdr"></div>
+  <div id="essArea"></div>
+  <div class="tabs">
+    <button class="tbtn act" onclick="switchTab('w')"><span class="tdf"></span>📜 Wisdom</button>
+    <button class="tbtn" onclick="switchTab('o')"><span class="tda"></span>🔮 Oracle</button>
+    <button class="tbtn" onclick="switchTab('g')"><span class="tdf"></span>🖼 Gallery</button>
+  </div>
+  <div class="tc act" id="wTab"></div>
+  <div class="tc" id="oTab"></div>
+  <div class="tc" id="gTab"></div>
+</div>
+
+<button class="fab fm" id="fab" onclick="fabClick()">+</button>
+
+<!-- ENHANCE MODAL -->
+<div class="mo" id="enhMo">
+  <div class="md" style="max-height:95vh">
+    <div class="mh"></div>
+    <div class="mt">📸 Photo Enhancement Studio</div>
+    <div class="ds" id="detStrip"><div class="dr2">🔍 Analyzing photo...</div></div>
+    <div class="baw" id="baWrap" style="height:220px">
+      <div class="bab"><img id="baB" src="" alt=""></div>
+      <div class="baa" id="baA"><img id="baAi" src="" alt=""></div>
+      <div class="bad" id="baD"></div>
+      <div class="balbL">ORIGINAL</div><div class="balbR">ENHANCED</div>
+    </div>
+    <div class="pb" id="enhPb" style="display:none"><div class="pf" id="enhPf"></div></div>
+    <div class="mf" style="margin-top:14px">
+      <div class="msl"><span class="bfree">FREE</span> Canvas Enhancement Tools</div>
+      <div class="eas">
+        <button class="ehb" id="bAuto" onclick="doAutoEnhance()">⚡ Auto Enhance</button>
+        <button class="ehb" id="bShrp" onclick="doSharpen()">🔬 Sharpen</button>
+        <button class="ehb" id="bBrt" onclick="doBrightness()">☀️ Brighten</button>
+        <button class="ehb" id="bCnt" onclick="doContrast()">◑ Contrast</button>
+        <button class="ehb" id="bWrm" onclick="doWarm()">🌅 Warm Tone</button>
+        <button class="ehb" id="bRst" onclick="doReset()">↺ Reset</button>
+      </div>
+    </div>
+    <!-- AI Colorize (B&W detected, AI connected) -->
+    <div class="mai" id="colorSec" style="display:none">
+      <div class="msl"><span class="bai">AI POWERED</span> Colorize Black & White Photo</div>
+      <div style="font-size:13px;color:var(--cs);margin-bottom:12px;font-style:italic">AI analyzes the scene and applies historically accurate Indian-era colors — skin tones, clothing, sky, surroundings.</div>
+      <button class="ehb aib" id="bColor" onclick="doColorize()" style="width:100%;padding:12px">
+        <span class="spin" id="cSpin" style="display:none"></span>
+        <span id="cTxt">🎨 AI Colorize this Photo</span>
+      </button>
+      <div id="palWrap" style="display:none">
+        <div style="font-size:11px;color:var(--cs);margin-top:10px;margin-bottom:4px">AI detected color palette:</div>
+        <div class="cp" id="pal"></div>
+      </div>
+    </div>
+    <!-- B&W detected but no AI key -->
+    <div class="mai" id="colorGate" style="display:none">
+      <div class="msl"><span class="bai">AI POWERED</span> AI Colorization</div>
+      <div style="font-size:13px;color:var(--cs);margin-bottom:10px;font-style:italic">Connect AI to colorize this black & white photo with historically accurate colors.</div>
+      <button class="ehb aib" onclick="openMo('apiMo')" style="width:100%;padding:12px">✦ Setup AI to Colorize</button>
+    </div>
+    <button class="spb" onclick="saveToPhone()">📱 Save Enhanced Photo to Device</button>
+    <button class="upb" onclick="useEnhanced()">✓ Use This Photo</button>
+    <button class="bs" onclick="useOriginal()">Use Original Instead</button>
+  </div>
+</div>
+
+<!-- API MODAL -->
+<div class="mo" id="apiMo">
+  <div class="md">
+    <div class="mh"></div><div class="mt">✦ Unlock AI Features</div>
+    <div style="background:rgba(108,63,160,0.1);border:1px solid rgba(155,111,208,0.3);border-radius:10px;padding:14px;margin-bottom:16px">
+      <div style="font-family:var(--fd);font-size:9px;letter-spacing:2px;color:var(--al);margin-bottom:10px;text-transform:uppercase">✦ What you unlock</div>
+      <div style="font-size:13px;color:var(--cr);line-height:2">🎨 AI colorizes black & white ancestral photos<br>🔮 Talk to your ancestor in their voice<br>📷 AI reads handwritten old letters<br>✨ Generates life philosophy summaries</div>
+    </div>
+    <p class="an2">Get a free API key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>. Stored only on this device.</p>
+    <div class="fg"><label class="fl">Anthropic API Key</label><input type="password" class="fi" id="apiInp" placeholder="sk-ant-..."></div>
+    <button class="bp2" onclick="doSaveKey()" style="background:linear-gradient(135deg,var(--ai),#4A2570);color:white">✦ Connect AI Features</button>
+    <button class="bs" onclick="closeMo('apiMo')">Continue with Free Features</button>
+  </div>
+</div>
+
+<!-- ANCESTOR MODAL -->
+<div class="mo" id="ancMo">
+  <div class="md">
+    <div class="mh"></div><div class="mt" id="ancMoT">✦ Add Ancestor</div>
+    <div class="mf">
+      <div class="msl"><span class="bfree">FREE</span> Basic Profile</div>
+      <div class="fg"><label class="fl">Photo</label>
+        <div class="ua" id="ancPa" onclick="document.getElementById('ancPi').click()">
+          <input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none">
+          <div class="ui">👤</div><div class="ut">Tap to add photo</div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Full Name</label><input type="text" class="fi" id="ancN" placeholder="e.g. Krishnamurthy Rao"></div>
+      <div class="fr">
+        <div class="fg"><label class="fl">Relationship</label>
+          <select class="fss" id="ancR">
+            <option>Grandfather (Thatha)</option><option>Grandmother (Avva)</option>
+            <option>Father (Nanna)</option><option>Mother (Amma)</option>
+            <option>Great-Grandfather</option><option>Great-Grandmother</option>
+            <option>Uncle (Mama)</option><option>Aunt (Pinni)</option>
+            <option>Mentor / Guru</option><option>Other Elder</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Language</label>
+          <select class="fss" id="ancL">
+            <option>Telugu</option><option>Hindi</option><option>Tamil</option>
+            <option>Kannada</option><option>Marathi</option><option>Bengali</option>
+            <option>English</option><option>Other Indian</option>
+          </select>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label class="fl">Birth Year</label><input type="number" class="fi" id="ancBy" placeholder="e.g. 1920" min="1800" max="2010"></div>
+        <div class="fg"><label class="fl">Death Year</label><input type="number" class="fi" id="ancDy" placeholder="If departed" min="1800" max="2030"></div>
+      </div>
+    </div>
+    <div class="mai">
+      <div class="msl"><span class="bai">AI USES THIS</span> Personality Context</div>
+      <div class="fg" style="margin-bottom:0"><label class="fl">Character & Values</label>
+        <textarea class="fta" id="ancD" placeholder="How did they speak? Their values, beliefs, habits... AI uses this to speak in their voice during Oracle conversations."></textarea>
+      </div>
+    </div>
+    <input type="hidden" id="ancEId">
+    <button class="bp2" onclick="saveAnc()">Save Ancestor</button>
+    <button class="bs" onclick="closeMo('ancMo')">Cancel</button>
+  </div>
+</div>
+
+<!-- WISDOM MODAL -->
+<div class="mo" id="wisMo">
+  <div class="md">
+    <div class="mh"></div><div class="mt">✦ Add to Wisdom Vault</div>
+    <div class="mf">
+      <div class="msl"><span class="bfree">FREE</span> Your Entry</div>
+      <div class="fg"><label class="fl">Type of Memory</label>
+        <div class="wtg">
+          <div class="wtb sl2" data-type="Story" onclick="selWT(this)"><span class="ti">📖</span><span class="tl">Story</span></div>
+          <div class="wtb" data-type="Life Lesson" onclick="selWT(this)"><span class="ti">💡</span><span class="tl">Lesson</span></div>
+          <div class="wtb" data-type="Letter" onclick="selWT(this)"><span class="ti">✉️</span><span class="tl">Letter</span></div>
+          <div class="wtb" data-type="Saying" onclick="selWT(this)"><span class="ti">🗣️</span><span class="tl">Saying</span></div>
+          <div class="wtb" data-type="Belief" onclick="selWT(this)"><span class="ti">🙏</span><span class="tl">Belief</span></div>
+          <div class="wtb" data-type="Memory" onclick="selWT(this)"><span class="ti">🌸</span><span class="tl">Memory</span></div>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Memory / Wisdom Text</label>
+        <textarea class="fta" id="wisT" placeholder="Write a story, saying, lesson, or memory..." style="min-height:100px"></textarea>
+      </div>
+      <div class="fg" style="margin-bottom:0"><label class="fl">Upload Image (optional)</label>
+        <div class="ua" id="wisPa" onclick="document.getElementById('wisPi').click()">
+          <input type="file" id="wisPi" accept="image/*" onchange="handleWisP(event)" style="display:none">
+          <div class="ui" id="wisUI">🖼️</div><div class="ut" id="wisUT">Tap to upload photo, letter or document</div>
+        </div>
+      </div>
+    </div>
+    <div class="mai">
+      <div class="msl"><span class="bai">AI POWERED</span> Extract from Image</div>
+      <div style="font-size:13px;color:var(--cs);margin-bottom:10px;font-style:italic">Upload image above, then AI reads handwriting or describes the photo.</div>
+      <button class="extb" id="extB" onclick="doExtract()" disabled>
+        <span class="spin" id="extSp" style="display:none"></span>✦ AI — Read letter / Describe photo
+      </button>
+    </div>
+    <button class="bp2" onclick="saveWis()">Add to Vault</button>
+    <button class="bs" onclick="closeMo('wisMo')">Cancel</button>
+  </div>
+</div>
+
+<footer id="appFooter" style="display:none;text-align:center;padding:28px 20px 36px;border-top:1px solid var(--br);margin-top:8px">
+  <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px">
+    <div style="width:1px;height:28px;background:linear-gradient(180deg,transparent,var(--go),transparent)"></div>
+    <span style="font-size:22px">🕯️</span>
+    <div style="width:1px;height:28px;background:linear-gradient(180deg,transparent,var(--go),transparent)"></div>
+  </div>
+  <div style="font-family:var(--fd);font-size:11px;letter-spacing:3px;color:var(--go);text-transform:uppercase;margin-bottom:8px">Designed &amp; Built by</div>
+  <div style="font-family:var(--fh);font-size:18px;color:var(--gl);font-weight:600;margin-bottom:14px;letter-spacing:0.5px">Kandregula Krishnamurthy</div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--cd)">
+    <span>Built with</span>
+    <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(192,128,255,0.12);border:1px solid rgba(192,128,255,0.4);border-radius:20px;padding:3px 10px;color:var(--al);font-family:var(--fd);font-size:10px;letter-spacing:1px;font-weight:600">✦ Claude by Anthropic</span>
+  </div>
+  <div style="margin-top:16px;font-size:11px;color:var(--cd);letter-spacing:1px;font-family:var(--fd)">Krishnamurthy Kandregula Innovation Lab</div>
+</footer>
+<div class="lb" id="lb"><button class="lbc" onclick="closeLB()">✕</button><img id="lbI" src="" alt=""></div>
+<div class="toast" id="toast"></div>
+<canvas id="cvs"></canvas><canvas id="cvs2"></canvas>
+
+<script>
+// STATE
+const S={ancestors:[],curId:null,curTab:'w',apiKey:'',chatH:{},wisPh64:null,wisPhTp:null,ancPh64:null,
+  enh:{origUrl:null,enhUrl:null,isGray:false,isBlurry:false,ctx:'anc',palette:{}}};
+const CVS=document.getElementById('cvs'),CVS2=document.getElementById('cvs2');
+const CX=CVS.getContext('2d'),CX2=CVS2.getContext('2d');
+
+function init(){loadS();regSW();renderHome();updApiBtn();initSlider();}
+function loadS(){try{const s=localStorage.getItem('am7');if(s)Object.assign(S,JSON.parse(s));}catch(e){}S.chatH=S.chatH||{};S.apiKey=localStorage.getItem('amk')||'';}
+function saveS(){localStorage.setItem('am7',JSON.stringify({ancestors:S.ancestors,chatH:S.chatH}));}
+function hasAI(){return!!S.apiKey;}
+function updApiBtn(){const b=document.getElementById('apiBtn');if(hasAI()){b.textContent='✦ AI Connected';b.className='apib conn';}else{b.textContent='✦ AI Setup';b.className='apib';}}
+function regSW(){if(!('serviceWorker'in navigator))return;const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('fetch',()=>{});`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})));}
+
+// ── CANVAS ENGINE ──
+function loadImgToCanvas(url){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.width,h=img.height;const MAX=900;
+      if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+      if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
+      CVS.width=w;CVS.height=h;CX.drawImage(img,0,0,w,h);res({w,h});
+    };img.src=url;
+  });
+}
+function isGrayscale(){
+  const d=CX.getImageData(0,0,CVS.width,CVS.height).data;
+  let col=0,tot=0;const step=Math.max(1,Math.floor(d.length/4/2000));
+  for(let i=0;i<d.length;i+=4*step){const r=d[i],g=d[i+1],b=d[i+2];if(Math.abs(r-g)>18||Math.abs(g-b)>18||Math.abs(r-b)>18)col++;tot++;}
+  return tot>0&&col/tot<0.08;
+}
+function detectBlur(){
+  const d=CX.getImageData(0,0,CVS.width,CVS.height).data,w=CVS.width,h=CVS.height;
+  let s=0,s2=0,n=0;const st=2;
+  for(let y=st;y<h-st;y+=st)for(let x=st;x<w-st;x+=st){
+    const i=(y*w+x)*4;
+    const g=d[i]*.299+d[i+1]*.587+d[i+2]*.114;
+    const L=-4*g+(d[((y-1)*w+x)*4]*.299+d[((y-1)*w+x)*4+1]*.587+d[((y-1)*w+x)*4+2]*.114)
+      +(d[((y+1)*w+x)*4]*.299+d[((y+1)*w+x)*4+1]*.587+d[((y+1)*w+x)*4+2]*.114)
+      +(d[(y*w+x-1)*4]*.299+d[(y*w+x-1)*4+1]*.587+d[(y*w+x-1)*4+2]*.114)
+      +(d[(y*w+x+1)*4]*.299+d[(y*w+x+1)*4+1]*.587+d[(y*w+x+1)*4+2]*.114);
+    s+=L;s2+=L*L;n++;
+  }
+  const mn=s/n,vr=(s2/n)-mn*mn;return vr<130;
+}
+function doUnsharpMask(str=0.7){
+  const w=CVS.width,h=CVS.height,orig=CX.getImageData(0,0,w,h);
+  CVS2.width=w;CVS2.height=h;CX2.filter='blur(1.5px)';CX2.drawImage(CVS,0,0);CX2.filter='none';
+  const bl=CX2.getImageData(0,0,w,h),res=CX.createImageData(w,h);
+  for(let i=0;i<orig.data.length;i+=4){
+    for(let c=0;c<3;c++)res.data[i+c]=clamp(orig.data[i+c]+str*(orig.data[i+c]-bl.data[i+c]));
+    res.data[i+3]=orig.data[i+3];
+  }CX.putImageData(res,0,0);
+}
+function doAutoLevels(){
+  const id=CX.getImageData(0,0,CVS.width,CVS.height),d=id.data;
+  const mn=[255,255,255],mx=[0,0,0];const st=4;
+  for(let i=0;i<d.length;i+=4*st)for(let c=0;c<3;c++){if(d[i+c]<mn[c])mn[c]=d[i+c];if(d[i+c]>mx[c])mx[c]=d[i+c];}
+  for(let i=0;i<d.length;i+=4)for(let c=0;c<3;c++){const rg=mx[c]-mn[c];d[i+c]=rg>10?clamp((d[i+c]-mn[c])*255/rg):d[i+c];}
+  CX.putImageData(id,0,0);
+}
+function doBrCn(br=0,cn=0){
+  const id=CX.getImageData(0,0,CVS.width,CVS.height),d=id.data;
+  const f=(259*(cn+255))/(255*(259-cn));
+  for(let i=0;i<d.length;i+=4)for(let c=0;c<3;c++)d[i+c]=clamp(f*(d[i+c]-128)+128+br);
+  CX.putImageData(id,0,0);
+}
+function doWarmTone(){
+  const id=CX.getImageData(0,0,CVS.width,CVS.height),d=id.data;
+  for(let i=0;i<d.length;i+=4){d[i]=clamp(d[i]+12);d[i+1]=clamp(d[i+1]+4);d[i+2]=clamp(d[i+2]-18);}
+  CX.putImageData(id,0,0);
+}
+function applyColorize(pal){
+  const id=CX.getImageData(0,0,CVS.width,CVS.height),d=id.data;
+  for(let i=0;i<d.length;i+=4){
+    const lum=(d[i]*.299+d[i+1]*.587+d[i+2]*.114)/255;
+    let hex;
+    if(lum>.78)hex=pal.sky_or_ceiling||pal.background||'#D8CCB8';
+    else if(lum>.58)hex=pal.skin_highlight||'#D4956A';
+    else if(lum>.40)hex=pal.skin_shadow||pal.clothing_primary||'#B8784A';
+    else if(lum>.24)hex=pal.clothing_primary||'#5A5A7A';
+    else if(lum>.12)hex=pal.clothing_secondary||pal.hair||'#3A3A4A';
+    else hex=pal.hair||'#1A1A2A';
+    const[cr,cg,cb]=h2r(hex);const str=0.45;
+    d[i]=clamp(d[i]*(1-str)+cr*str);d[i+1]=clamp(d[i+1]*(1-str)+cg*str);d[i+2]=clamp(d[i+2]*(1-str)+cb*str);
+  }CX.putImageData(id,0,0);
+}
+
+// ── ENHANCE ACTIONS ──
+async function doAutoEnhance(){
+  markA('bAuto');showPb();setPf(20);await sl(50);
+  doAutoLevels();setPf(50);await sl(50);
+  doUnsharpMask(S.enh.isBlurry?1.0:0.5);setPf(80);await sl(50);
+  doBrCn(10,20);setPf(100);
+  updAfter();setTimeout(hidePb,400);showToast('⚡ Auto enhancement applied','success');
+}
+function doSharpen(){markA('bShrp');doUnsharpMask(1.2);updAfter();showToast('🔬 Sharpening applied');}
+function doBrightness(){markA('bBrt');doBrCn(25,0);updAfter();showToast('☀️ Brightness increased');}
+function doContrast(){markA('bCnt');doBrCn(0,40);updAfter();showToast('◑ Contrast enhanced');}
+function doWarm(){markA('bWrm');doWarmTone();updAfter();showToast('🌅 Warm tone applied');}
+function doReset(){loadImgToCanvas(S.enh.origUrl).then(()=>{updAfter();showToast('↺ Reset to original');});document.querySelectorAll('.ehb').forEach(b=>b.classList.remove('actv'));document.getElementById('palWrap').style.display='none';}
+function markA(id){document.querySelectorAll('.ehb').forEach(b=>b.id!==id&&b.classList.remove('actv'));document.getElementById(id)?.classList.toggle('actv');}
+
+async function doColorize(){
+  if(!hasAI()){openMo('apiMo');return;}
+  const sp=document.getElementById('cSpin'),tx=document.getElementById('cTxt'),btn=document.getElementById('bColor');
+  sp.style.display='inline-block';tx.textContent='Analyzing colors...';btn.disabled=true;showPb();setPf(20);
+  try{
+    const b64=CVS.toDataURL('image/jpeg',0.85).split(',')[1];setPf(40);
+    const prompt=`This is a black and white historical photograph, likely of an Indian family/person from the 1920s-1970s. Analyze the scene carefully and return ONLY valid JSON (no markdown, no explanation, no extra text) with historically accurate color suggestions:\n{"skin_highlight":"#hex","skin_shadow":"#hex","hair":"#hex","clothing_primary":"#hex","clothing_secondary":"#hex","sky_or_ceiling":"#hex","background":"#hex","vegetation":"#hex","description":"one sentence about the scene"}\nUse warm authentic Indian colors. Skin should be warm brown tones appropriate for South Indian people.`;
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:[
+        {type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},
+        {type:'text',text:prompt}
+      ]}]})});
+    const data=await res.json();if(data.error)throw new Error(data.error.message);
+    setPf(70);
+    let pal;try{pal=JSON.parse(data.content[0].text);}catch(e){throw new Error('Color parse error');}
+    S.enh.palette=pal;applyColorize(pal);setPf(90);
+    showPalChips(pal);updAfter();setPf(100);setTimeout(hidePb,600);showToast('✦ AI colorization applied!','ai');
+  }catch(e){showToast('Colorization failed: '+e.message,'error');hidePb();}
+  sp.style.display='none';tx.textContent='🎨 Re-colorize';btn.disabled=false;
+}
+function showPalChips(pal){
+  const wr=document.getElementById('palWrap'),cn=document.getElementById('pal');
+  const keys=['skin_highlight','skin_shadow','hair','clothing_primary','clothing_secondary','sky_or_ceiling','background','vegetation'];
+  cn.innerHTML=keys.filter(k=>pal[k]).map(k=>`<div style="display:flex;flex-direction:column;align-items:center;gap:3px" title="${k.replace(/_/g,' ')}"><div class="cc" style="background:${pal[k]}"></div><div class="ccl">${k.split('_')[0]}</div></div>`).join('');
+  if(pal.description)cn.innerHTML+=`<div style="width:100%;font-size:12px;color:var(--cs);font-style:italic;margin-top:6px;padding-top:8px;border-top:1px solid var(--br)">${pal.description}</div>`;
+  wr.style.display='block';
+}
+
+// ── BEFORE/AFTER SLIDER ──
+let isDrag=false;
+function initSlider(){
+  const wrap=document.getElementById('baWrap'),div=document.getElementById('baD'),after=document.getElementById('baA');
+  function setPos(x){const r=wrap.getBoundingClientRect();const p=Math.min(Math.max((x-r.left)/r.width,.05),.95)*100;div.style.left=p+'%';after.style.clipPath=`inset(0 ${100-p}% 0 0)`;}
+  div.addEventListener('mousedown',()=>isDrag=true);div.addEventListener('touchstart',()=>isDrag=true,{passive:true});
+  document.addEventListener('mousemove',e=>{if(isDrag)setPos(e.clientX);});
+  document.addEventListener('touchmove',e=>{if(isDrag)setPos(e.touches[0].clientX);},{passive:true});
+  document.addEventListener('mouseup',()=>isDrag=false);document.addEventListener('touchend',()=>isDrag=false);
+  wrap.addEventListener('click',e=>setPos(e.clientX));
+}
+function updAfter(){document.getElementById('baAi').src=CVS.toDataURL('image/jpeg',0.9);}
+function showPb(){document.getElementById('enhPb').style.display='block';}
+function hidePb(){const p=document.getElementById('enhPb');p.style.display='none';document.getElementById('enhPf').style.width='0%';}
+function setPf(v){showPb();document.getElementById('enhPf').style.width=v+'%';}
+
+async function openEnh(url,ctx){
+  S.enh.origUrl=url;S.enh.enhUrl=null;S.enh.ctx=ctx;S.enh.palette={};
+  document.getElementById('palWrap').style.display='none';
+  document.querySelectorAll('.ehb').forEach(b=>b.classList.remove('actv'));
+  document.getElementById('cTxt').textContent='🎨 AI Colorize this Photo';
+  document.getElementById('cSpin').style.display='none';
+  document.getElementById('bColor').disabled=false;
+  hidePb();
+  const{w,h}=await loadImgToCanvas(url);
+  document.getElementById('baB').src=url;document.getElementById('baAi').src=url;
+  const ratio=h/w,dispW=Math.min(window.innerWidth-40,560);
+  document.getElementById('baWrap').style.height=Math.min(dispW*ratio,320)+'px';
+  document.getElementById('baD').style.left='50%';document.getElementById('baA').style.clipPath='inset(0 50% 0 0)';
+  // Analyze
+  S.enh.isGray=isGrayscale();S.enh.isBlurry=detectBlur();
+  showDetection('Analyzing...');
+  openMo('enhMo');
+  // ── AUTO-APPLY if issues found ──
+  if(S.enh.isBlurry){
+    // Auto enhance blurry photos immediately
+    showDetection('⚡ Blurry photo detected — auto-enhancing...');
+    showPb();setPf(15);await sl(80);
+    doAutoLevels();setPf(40);await sl(80);
+    doUnsharpMask(1.1);setPf(65);await sl(80);
+    doBrCn(12,25);setPf(85);await sl(80);
+    if(!S.enh.isGray)doWarmTone();
+    setPf(100);updAfter();
+    document.getElementById('bAuto').classList.add('actv');
+    setTimeout(hidePb,500);
+    showDetection('done');
+    showToast('⚡ Blur fixed — auto-enhanced!','success');
+  } else {
+    showDetection('done');
+  }
+  // Show colorize section for B&W photos
+  const hasKey=hasAI();
+  document.getElementById('colorSec').style.display=S.enh.isGray&&hasKey?'block':'none';
+  document.getElementById('colorGate').style.display=S.enh.isGray&&!hasKey?'block':'none';
+}
+function showDetection(phase){
+  const s=document.getElementById('detStrip');
+  if(phase==='Analyzing...'||phase?.startsWith('⚡')){
+    s.innerHTML=`<div class="dr2"><span class="spin"></span> &nbsp;${phase||'Analyzing...'}</div>`;return;
+  }
+  // Final state
+  const bp=S.enh.isBlurry?'<span class="dp w">⚠ Blurry — Auto Fixed</span>':'<span class="dp ok">✓ Sharp</span>';
+  const cp=S.enh.isGray?'<span class="dp bw">◐ Black & White</span>':'<span class="dp ok">✓ Color photo</span>';
+  let tip='';
+  if(S.enh.isBlurry&&S.enh.isGray)tip='Blur removed automatically. Use AI Colorize below to add authentic color.';
+  else if(S.enh.isBlurry)tip='Blur removed automatically. Adjust further with tools below if needed.';
+  else if(S.enh.isGray)tip='Sharp B&W photo. Use AI Colorize below to add authentic historical colors.';
+  else tip='Photo looks good! Apply any optional enhancements below.';
+  s.innerHTML=`<div class="dr2">📊 ${cp} &nbsp;${bp}</div>
+    <div class="dr2" style="color:var(--cs);font-size:12px;margin-top:4px">${tip}</div>`;
+}
+function saveToPhone(){
+  const a=document.createElement('a');a.href=CVS.toDataURL('image/jpeg',.95);
+  a.download='ancestralmind_enhanced_'+Date.now()+'.jpg';a.click();
+  showToast('📱 Photo saved to device!','success');
+}
+function useEnhanced(){
+  const url=CVS.toDataURL('image/jpeg',.92);S.enh.enhUrl=url;
+  if(S.enh.ctx==='anc'){
+    S.ancPh64=url;
+    document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none"><img class="pv" src="${url}" style="border:2px solid var(--al)"><div class="ut" style="color:var(--al)">✦ Enhanced photo</div>`;
+  }else{
+    S.wisPh64=url.split(',')[1];S.wisPhTp='image/jpeg';
+    document.getElementById('wisUI').textContent='✦';document.getElementById('wisUT').textContent='Enhanced photo ready';
+    document.getElementById('extB').disabled=false;
+    const area=document.getElementById('wisPa');let img=area.querySelector('img.wp');
+    if(!img){img=document.createElement('img');img.className='wp';img.style.cssText='width:60px;height:60px;object-fit:cover;border-radius:6px;margin-bottom:6px;display:block;border:2px solid var(--al)';area.prepend(img);}
+    img.src=url;
+  }closeMo('enhMo');showToast('✦ Enhanced photo applied!','success');
+}
+function useOriginal(){
+  if(S.enh.ctx==='anc'){S.ancPh64=S.enh.origUrl;document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none"><img class="pv" src="${S.enh.origUrl}"><div class="ut">Tap to change photo</div>`;}
+  else{S.wisPh64=S.enh.origUrl.split(',')[1];S.wisPhTp='image/jpeg';document.getElementById('extB').disabled=false;}
+  closeMo('enhMo');showToast('Original photo used');
+}
+
+// ── NAV ──
+function goHome(){document.getElementById('homeScr').classList.add('act');document.getElementById('detScr').classList.remove('act');document.getElementById('fab').classList.remove('vis');S.curId=null;renderHome();}
+function openAnc(id){S.curId=id;S.curTab='w';document.getElementById('homeScr').classList.remove('act');document.getElementById('detScr').classList.add('act');document.getElementById('appFooter').style.display='none';const f=document.getElementById('fab');f.classList.add('vis','fm');f.classList.remove('am');renderDet();renderTab('w');}
+function switchTab(t){S.curTab=t;document.querySelectorAll('.tbtn').forEach((b,i)=>b.classList.toggle('act',['w','o','g'][i]===t));document.querySelectorAll('.tc').forEach((c,i)=>c.classList.toggle('act',['wTab','oTab','gTab'][i]===t+'Tab'));renderTab(t);const f=document.getElementById('fab');if(t==='o'){f.textContent='🔮';f.classList.remove('fm');f.classList.add('am');}else{f.textContent='+';f.classList.remove('am');f.classList.add('fm');}}
+function fabClick(){if(S.curTab!=='o')openWisMo();}
+
+// ── RENDER ──
+function renderHome(){
+  const ob=document.getElementById('obView');
+  const gv=document.getElementById('gridView');
+  document.getElementById('appFooter').style.display='block';
+  if(S.ancestors.length===0){
+    ob.style.display='block';gv.style.display='none';return;
+  }
+  ob.style.display='none';gv.style.display='block';
+  const g=document.getElementById('ancGrid');let h='';
+  S.ancestors.forEach((a,i)=>{
+    const wc=(a.wisdomEntries||[]).length;
+    h+=`<div class="ac2" onclick="openAnc('${a.id}')" style="animation-delay:${i*.07}s">
+      ${wc?`<div class="abd">${wc} 📜</div>`:''}
+      <div class="aav">${a.photo?`<img src="${a.photo}">`:`<div class="ini">${ini(a.name)}</div>`}${a.phEnh?'<div class="eb">✦</div>':''}</div>
+      <div class="an">${a.name}</div><div class="ar">${a.relation}</div><div class="ay">${fmtY(a.birthYear,a.deathYear)}</div>
+    </div>`;
+  });
+  h+=`<div class="aac" onclick="openAddAncMo()"><div class="pl">+</div><span>Add Ancestor</span><span class="bfree" style="margin-top:6px">FREE</span></div>`;
+  g.innerHTML=h;
+}
+
+function loadSampleAncestor(){
+  const sample={
+    id:gid(),
+    name:'Venkata Rao Kandregula',
+    relation:'Grandfather (Thatha)',
+    language:'Telugu',
+    birthYear:'1918',
+    deathYear:'1992',
+    description:'A deeply principled man who believed hard work and integrity were inseparable. He spoke in Telugu proverbs, rose before sunrise every day, and never raised his voice — yet every word he said carried the weight of mountains. He had a particular love for jasmine flowers, classical Carnatic music, and feeding strangers.',
+    photo:null,
+    phEnh:false,
+    essence:null,
+    wisdomEntries:[
+      {id:gid(),type:'Saying',text:'నీరు తక్కువగా ఉన్నప్పుడు, చేను నీటిని నమ్ముకుంటుంది — When water is scarce, the field trusts the rain will come. Worry is the drought you bring upon yourself.',timestamp:Date.now()-86400000*30},
+      {id:gid(),type:'Life Lesson',text:'He always said: never borrow money to celebrate. Celebrate when the harvest comes in, not when it is still in the ground. Joy that is borrowed carries someone else\'s grief.',timestamp:Date.now()-86400000*20},
+      {id:gid(),type:'Story',text:'During the drought of 1953, when other farmers abandoned their fields, Thatha stayed. He mortgaged his gold ring to buy seeds and told Paati — "The land fed my father. I will not leave it when it is hungry." That year the rains came late, but they came. He always said the land remembers loyalty.',timestamp:Date.now()-86400000*10},
+      {id:gid(),type:'Belief',text:'He believed every house needs three things to truly be a home: a tulsi plant in the courtyard, food cooking on the stove, and an elder who still tells stories. Without any one of these, it is just a building.',timestamp:Date.now()-86400000*5},
+      {id:gid(),type:'Memory',text:'Every Sankranti morning, he would wake before anyone and draw the first kolam himself — outside the front door. When asked why, he said: "The first welcome of the new year should come from the man of the house. It tells the gods we are ready."',timestamp:Date.now()-86400000*2},
+    ]
+  };
+  S.ancestors.push(sample);
+  saveS();
+  showToast('Sample ancestor loaded ✦ Explore freely!','success');
+  renderHome();
+  // Open the ancestor immediately
+  setTimeout(()=>openAnc(sample.id),400);
+}
+function renderDet(){
+  const a=ga();if(!a)return;
+  document.getElementById('detHdr').innerHTML=`
+    <button class="bbtn" onclick="goHome()">←</button>
+    <button class="ebtn" onclick="openEditAncMo('${a.id}')">Edit</button>
+    <div class="dav">${a.photo?`<img src="${a.photo}">`:`<div class="ini">${ini(a.name)}</div>`}</div>
+    <div class="dn">${a.name}</div><div class="dr">${a.relation}</div>
+    <div class="dy">${fmtY(a.birthYear,a.deathYear)}</div>
+    ${a.description?`<div class="dd">"${a.description}"</div>`:''}`;
+  renderEss(a);
+}
+function renderEss(a){
+  const el=document.getElementById('essArea');
+  if(a.essence){el.innerHTML=`<div style="padding:12px 16px 0"><div class="esS"><div class="esL"><span class="bai">AI</span> Life Philosophy</div>${a.essence}</div></div>`;}
+  else if((a.wisdomEntries||[]).length>=2){el.innerHTML=`<button class="esgb" onclick="genEss('${a.id}')"><span class="bai">AI</span> Generate Life Philosophy Summary</button>`;}
+  else el.innerHTML='';
+}
+function renderTab(t){const a=ga();if(!a)return;if(t==='w')renderW(a);else if(t==='o')renderO(a);else renderG(a);}
+
+function renderW(a){
+  const el=document.getElementById('wTab'),entries=a.wisdomEntries||[];
+  let h=`<div class="fz"><div class="fzl"><span class="bfree">FREE</span> Wisdom Vault</div><div class="fzb"><button class="awb" onclick="openWisMo()">+ Add Wisdom or Memory</button>`;
+  if(!entries.length)h+=`<div class="empty"><div class="ei">📜</div><p>No entries yet.<br>Add stories, sayings, lessons,<br>or upload old photos & letters.</p></div>`;
+  else entries.slice().reverse().forEach(w=>{h+=`<div class="we">
+    <button class="wdl" onclick="delWis('${a.id}','${w.id}')">✕</button>
+    <div class="wty">${tIcon(w.type)} ${w.type}${w.imgEnh?` <span class="bai" style="font-size:9px">AI Enhanced</span>`:''}</div>
+    ${w.image?`<img class="wim${w.imgEnh?' enh':''}" src="${w.image}" onclick="openLB(this.src)">`:''}
+    ${w.text?`<div class="wtx">${w.text.replace(/\n/g,'<br>')}</div>`:''}
+    <div class="wdt">${new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</div>
+  </div>`;});
+  h+=`</div></div>`;el.innerHTML=h;
+}
+
+function renderO(a){
+  const el=document.getElementById('oTab');
+  if(!hasAI()){el.innerHTML=`<div class="az"><div class="azl"><span class="bai">AI POWERED</span> Oracle Chat</div><div class="azb"><div class="aig"><div class="aig-i">🔮</div><div class="aig-t">Talk to ${fn(a.name)}</div><div class="aig-d">Connect AI to have real conversations drawn from the wisdom you've preserved.</div><div class="aig-fs"><div class="aig-f"><span>🗣️</span>Speaks in their voice & personality</div><div class="aig-f"><span>📜</span>Draws from recorded wisdom</div><div class="aig-f"><span>🌏</span>Responds in their cultural tone</div><div class="aig-f"><span>🎨</span>Can colorize your B&W photos</div></div><button class="ubtn" onclick="openMo('apiMo')">✦ Setup AI — Free API Key</button></div></div></div>`;return;}
+  if(!(a.wisdomEntries||[]).length){el.innerHTML=`<div class="az"><div class="azl"><span class="bai">AI</span> Oracle Chat</div><div class="azb"><div class="empty"><div class="ei">📜</div><p>Add at least one wisdom entry so ${fn(a.name)} has memories to draw from.</p></div></div></div>`;return;}
+  const history=S.chatH[a.id]||[];
+  let h=`<div class="az"><div class="azl"><span class="bai">AI</span> Speaking as ${a.name}</div><div class="azb">
+    <div class="oi"><div class="oii">🔮</div><div class="oit">Ask ${fn(a.name)} anything.<br>Their wisdom guides every response.</div></div>
+    <div class="cms" id="chatMsgs">`;
+  if(!history.length)h+=`<div class="bu anc"><div class="acn">${a.name}</div>My dear one, you've called upon me. Ask whatever weighs on your heart — I am here.</div>`;
+  else history.forEach(m=>{h+=m.role==='user'?`<div class="bu user">${m.content}</div>`:`<div class="bu anc"><div class="acn">${a.name}</div>${m.content}</div>`;});
+  h+=`</div><div class="cr2"><textarea class="ci" id="chatI" placeholder="Ask ${fn(a.name)} something..." rows="1" onkeydown="chatKey(event)" oninput="aRes(this)"></textarea>
+    <button class="cs" id="chatSend" onclick="sendMsg()">↑</button></div></div></div>`;
+  el.innerHTML=h;scrollChat();
+}
+
+function renderG(a){
+  const el=document.getElementById('gTab'),imgs=(a.wisdomEntries||[]).filter(w=>w.image);
+  let h=`<div class="fz"><div class="fzl"><span class="bfree">FREE</span> Photo Gallery</div><div class="fzb">`;
+  if(!imgs.length)h+=`<div class="empty"><div class="ei">🖼️</div><p>No images yet.<br>Add wisdom entries with photos.</p></div>`;
+  else h+=`<div class="gg">${imgs.map(w=>`<div class="gi${w.imgEnh?' enh':''}"><img src="${w.image}" onclick="openLB(this.src)">${w.imgEnh?'<div class="em">✦ AI</div>':''}</div>`).join('')}</div>`;
+  h+=`</div></div>`;el.innerHTML=h;
+}
+
+// ── ORACLE ──
+function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+function aRes(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
+async function sendMsg(){
+  if(!hasAI()){showToast('Please setup AI first','error');openMo('apiMo');return;}
+  const a=ga();const inp=document.getElementById('chatI');const msg=inp.value.trim();if(!msg)return;
+  inp.value='';inp.style.height='auto';document.getElementById('chatSend').disabled=true;
+  if(!S.chatH[a.id])S.chatH[a.id]=[];
+  S.chatH[a.id].push({role:'user',content:msg});
+  const div=document.getElementById('chatMsgs');
+  div.innerHTML+=`<div class="bu user">${msg}</div>`;
+  div.innerHTML+=`<div class="bu anc" id="typB"><div class="acn">${a.name}</div><div class="typ"><div class="td2"></div><div class="td2"></div><div class="td2"></div></div></div>`;
+  scrollChat();
+  try{
+    const reply=await callClaude(oraPrompt(a),S.chatH[a.id].map(m=>({role:m.role,content:m.content})));
+    document.getElementById('typB').remove();
+    S.chatH[a.id].push({role:'assistant',content:reply});
+    div.innerHTML+=`<div class="bu anc" style="animation:fadeUp 0.3s ease"><div class="acn">${a.name}</div>${reply}</div>`;
+    saveS();scrollChat();
+  }catch(e){document.getElementById('typB')?.remove();div.innerHTML+=`<div class="bu anc">I couldn't respond — please check your API key.</div>`;showToast('API error: '+e.message,'error');}
+  document.getElementById('chatSend').disabled=false;
+}
+function oraPrompt(a){const e=(a.wisdomEntries||[]).map(w=>`[${w.type}]: ${w.text||'(image)'}`).join('\n');return `You are ${a.name}, the ${a.relation} of the person speaking to you. Lived ${a.birthYear||'?'}–${a.deathYear||'present'}. Culture: ${a.language||'Indian'}.\nCharacter: ${a.description||'A wise and loving elder.'}\nWisdom:\n${e||'Speak warmly as this ancestor.'}\nINSTRUCTIONS: Speak ONLY as ${a.name}. 2-4 paragraphs. Warm, culturally rich. Never break character or mention AI.`;}
+function scrollChat(){const el=document.getElementById('chatMsgs');if(el)setTimeout(()=>el.scrollTop=el.scrollHeight,100);}
+
+// ── ESSENCE ──
+async function genEss(id){
+  if(!hasAI()){showToast('Please setup AI first','error');openMo('apiMo');return;}
+  const a=S.ancestors.find(x=>x.id===id);if(!a)return;
+  const btn=document.querySelector('.esgb');if(btn){btn.innerHTML='<span class="spin"></span> Generating...';btn.disabled=true;}
+  try{
+    const entries=(a.wisdomEntries||[]).map(w=>`[${w.type}]: ${w.text}`).join('\n');
+    const ess=await callClaude('You are a master biographer writing about real human beings with love and precision.',[{role:'user',content:`Based on these memories of ${a.name} (${a.relation}, ${a.birthYear}–${a.deathYear||'present'}):\n${entries}\n\nWrite a single evocative paragraph (4-5 sentences) capturing this person's life philosophy and essence — for their grandchildren to read generations later. Personal, poetic, grounded in the details above.`}]);
+    a.essence=ess;saveS();renderEss(a);showToast('✦ Life philosophy generated','ai');
+  }catch(e){showToast('Could not generate: '+e.message,'error');if(btn){btn.innerHTML='<span class="bai">AI</span> Generate Life Philosophy Summary';btn.disabled=false;}}
+}
+
+// ── EXTRACT ──
+async function doExtract(){
+  if(!hasAI()){showToast('Please setup AI first','error');openMo('apiMo');return;}
+  if(!S.wisPh64){showToast('Upload an image first','error');return;}
+  const btn=document.getElementById('extB'),sp=document.getElementById('extSp');
+  btn.disabled=true;sp.style.display='inline-block';
+  try{
+    const a=ga();
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[
+        {type:'image',source:{type:'base64',media_type:S.wisPhTp,data:S.wisPh64}},
+        {type:'text',text:`This is an old image related to ${a?a.name:'a family ancestor'}. If it contains handwritten or printed text, transcribe it fully. If it is a photograph, describe it in rich detail — who is visible, setting, mood, significance. Write warmly as if narrating a family archive.`}
+      ]}]})});
+    const data=await res.json();if(data.error)throw new Error(data.error.message);
+    const ta=document.getElementById('wisT');ta.value=(ta.value?ta.value+'\n\n':'')+data.content[0].text;
+    showToast('✦ AI extraction complete','ai');
+  }catch(e){showToast('Extraction failed: '+e.message,'error');}
+  btn.disabled=false;sp.style.display='none';
+}
+
+// ── CLAUDE ──
+async function callClaude(sys,msgs){
+  const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:msgs})});
+  const data=await res.json();if(data.error)throw new Error(data.error.message);
+  return data.content.map(c=>c.text||'').join('');
+}
+
+// ── ANCESTOR CRUD ──
+function openAddAncMo(){
+  document.getElementById('ancMoT').textContent='✦ Add Ancestor';
+  ['ancN','ancBy','ancDy','ancD'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ancR').selectedIndex=0;document.getElementById('ancL').selectedIndex=0;
+  document.getElementById('ancEId').value='';S.ancPh64=null;resetAncP();openMo('ancMo');
+}
+function openEditAncMo(id){
+  const a=S.ancestors.find(x=>x.id===id);if(!a)return;
+  document.getElementById('ancMoT').textContent='✦ Edit Ancestor';
+  document.getElementById('ancN').value=a.name;document.getElementById('ancR').value=a.relation;
+  document.getElementById('ancL').value=a.language||'Telugu';document.getElementById('ancBy').value=a.birthYear||'';
+  document.getElementById('ancDy').value=a.deathYear||'';document.getElementById('ancD').value=a.description||'';
+  document.getElementById('ancEId').value=id;S.ancPh64=a.photo||null;
+  if(a.photo){document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none"><img class="pv" src="${a.photo}"><div class="ut">Tap to change</div>`;}
+  else resetAncP();openMo('ancMo');
+}
+function resetAncP(){document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none"><div class="ui">👤</div><div class="ut">Tap to add photo</div>`;}
+function handleAncP(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>openEnh(ev.target.result,'anc');r.readAsDataURL(f);}
+function saveAnc(){
+  const name=document.getElementById('ancN').value.trim();if(!name){showToast('Please enter a name','error');return;}
+  const eid=document.getElementById('ancEId').value;
+  const phEnh=!!(S.enh.enhUrl&&S.enh.ctx==='anc');
+  const data={name,relation:document.getElementById('ancR').value,language:document.getElementById('ancL').value,birthYear:document.getElementById('ancBy').value||null,deathYear:document.getElementById('ancDy').value||null,description:document.getElementById('ancD').value.trim(),photo:S.ancPh64,phEnh};
+  if(eid){const idx=S.ancestors.findIndex(a=>a.id===eid);if(idx>-1){S.ancestors[idx]={...S.ancestors[idx],...data};showToast('Updated ✦','success');}}
+  else{S.ancestors.push({id:gid(),wisdomEntries:[],essence:null,...data});showToast('Ancestor added ✦','success');}
+  saveS();closeMo('ancMo');if(eid&&S.curId===eid)renderDet();else renderHome();
+}
+
+// ── WISDOM CRUD ──
+function openWisMo(){
+  S.wisPh64=null;S.wisPhTp=null;document.getElementById('wisT').value='';
+  document.getElementById('extB').disabled=true;document.getElementById('wisUI').textContent='🖼️';
+  document.getElementById('wisUT').textContent='Tap to upload photo, letter or document';
+  document.querySelector('.wtb.sl2')?.classList.remove('sl2');
+  document.querySelector('.wtb[data-type="Story"]').classList.add('sl2');
+  document.getElementById('wisPa').querySelector('img')?.remove();openMo('wisMo');
+}
+function selWT(el){document.querySelectorAll('.wtb').forEach(b=>b.classList.remove('sl2'));el.classList.add('sl2');}
+function handleWisP(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>openEnh(ev.target.result,'wis');r.readAsDataURL(f);}
+function saveWis(){
+  const a=ga();if(!a)return;
+  const text=document.getElementById('wisT').value.trim();
+  const type=document.querySelector('.wtb.sl2')?.dataset.type||'Memory';
+  const image=S.wisPh64?`data:${S.wisPhTp};base64,${S.wisPh64}`:null;
+  const imgEnh=!!(S.enh.enhUrl&&S.enh.ctx==='wis');
+  if(!text&&!image){showToast('Add text or an image','error');return;}
+  if(!a.wisdomEntries)a.wisdomEntries=[];
+  a.wisdomEntries.push({id:gid(),type,text,image,imgEnh,timestamp:Date.now()});
+  a.essence=null;saveS();closeMo('wisMo');showToast('Added to Vault ✦','success');renderDet();renderTab('w');
+}
+function delWis(aId,wId){const a=S.ancestors.find(x=>x.id===aId);if(!a)return;a.wisdomEntries=a.wisdomEntries.filter(w=>w.id!==wId);a.essence=null;saveS();renderDet();renderTab(S.curTab);showToast('Entry removed');}
+
+// ── MODALS ──
+function openMo(id){document.getElementById(id).classList.add('op');}
+function closeMo(id){document.getElementById(id).classList.remove('op');}
+window.addEventListener('click',e=>{if(e.target.classList.contains('mo'))e.target.classList.remove('op');});
+function doSaveKey(){
+  const k=document.getElementById('apiInp').value.trim();
+  if(!k.startsWith('sk-ant-')){showToast('Invalid key format','error');return;}
+  localStorage.setItem('amk',k);S.apiKey=k;updApiBtn();closeMo('apiMo');showToast('✦ AI Connected!','ai');
+  if(S.enh.isGray&&document.getElementById('enhMo').classList.contains('op')){document.getElementById('colorSec').style.display='block';document.getElementById('colorGate').style.display='none';}
+  if(S.curId&&S.curTab==='o')renderTab('o');
+}
+
+// ── LB ──
+function openLB(src){document.getElementById('lbI').src=src;document.getElementById('lb').classList.add('op');}
+function closeLB(){document.getElementById('lb').classList.remove('op');}
+document.getElementById('lb').addEventListener('click',closeLB);
+
+// ── TOAST ──
+let tT;
+function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),2800);}
+
+// ── HELPERS ──
+function ga(){return S.ancestors.find(a=>a.id===S.curId);}
+function gid(){return Math.random().toString(36).substr(2,10);}
+function ini(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().substr(0,2);}
+function fmtY(b,d){if(!b&&!d)return '';if(b&&d)return `${b} – ${d}`;if(b)return `Born ${b}`;return '';}
+function tIcon(t){return{Story:'📖','Life Lesson':'💡',Letter:'✉️',Saying:'🗣️',Belief:'🙏',Memory:'🌸'}[t]||'📜';}
+function fn(name){return name.split(' ')[0];}
+function clamp(v){return Math.max(0,Math.min(255,Math.round(v)));}
+function sl(ms){return new Promise(r=>setTimeout(r,ms));}
+function h2r(hex){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return[r,g,b];}
+
+init();
+</script>
+</body>
+</html>
