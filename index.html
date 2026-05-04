@@ -156,8 +156,10 @@ body{background:#0E0702;background-color:#0E0702;color:#FEFAF2;color:var(--cr);f
 .gi.enh{border-color:var(--al)}
 .gi .em{position:absolute;bottom:4px;right:4px;background:var(--ai);border-radius:10px;font-size:9px;padding:1px 5px;color:white;font-family:var(--fd)}
 /* MODALS */
-.mo{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.mo{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);align-items:flex-end;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .mo.op{display:flex}
+#enhMo{z-index:300}
+#apiMo{z-index:250}
 .md{background:#160A04;background:var(--bm);border:1px solid var(--br);border-radius:20px 20px 0 0;padding:20px 20px 40px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;animation:slideUp 0.3s ease}
 .mh{width:40px;height:4px;background:var(--br);border-radius:2px;margin:0 auto 18px}
 .mt{font-family:var(--fd);font-size:16px;color:var(--gl);letter-spacing:1px;margin-bottom:18px;text-align:center}
@@ -171,10 +173,10 @@ body{background:#0E0702;background-color:#0E0702;color:#FEFAF2;color:var(--cr);f
 .fi:focus,.fss:focus,.fta:focus{border-color:var(--go)}
 .fta{resize:vertical;min-height:90px;line-height:1.6}.fss{appearance:none;cursor:pointer}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.ua{border:2px dashed rgba(240,168,24,0.38);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.ua{border:2px dashed rgba(240,168,24,0.38);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
 .ua:hover{border-color:var(--go);background:rgba(240,168,24,0.07)}
 .ua img.pv{width:70px;height:70px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:block}
-.ua input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.ua input[type=file]{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0;-webkit-appearance:none;appearance:none}
 .ui{font-size:26px;color:var(--go);margin-bottom:6px}.ut{font-size:12px;color:var(--cs)}
 .wtg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
 .wtb{padding:10px 6px;background:var(--bc);border:1px solid var(--br);border-radius:8px;cursor:pointer;text-align:center;transition:all 0.2s}
@@ -443,8 +445,8 @@ canvas{display:none}
     <div class="mf">
       <div class="msl"><span class="bfree">FREE</span> Basic Profile</div>
       <div class="fg"><label class="fl">Photo</label>
-        <div class="ua" id="ancPa" onclick="document.getElementById('ancPi').click()">
-          <input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none">
+        <div class="ua" id="ancPa">
+          <input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)">
           <div class="ui">👤</div><div class="ut">Tap to add photo</div>
         </div>
       </div>
@@ -504,8 +506,8 @@ canvas{display:none}
         <textarea class="fta" id="wisT" placeholder="Write a story, saying, lesson, or memory..." style="min-height:100px"></textarea>
       </div>
       <div class="fg" style="margin-bottom:0"><label class="fl">Upload Image (optional)</label>
-        <div class="ua" id="wisPa" onclick="document.getElementById('wisPi').click()">
-          <input type="file" id="wisPi" accept="image/*" onchange="handleWisP(event)" style="display:none">
+        <div class="ua" id="wisPa">
+          <input type="file" id="wisPi" accept="image/*" onchange="handleWisP(event)">
           <div class="ui" id="wisUI">🖼️</div><div class="ut" id="wisUT">Tap to upload photo, letter or document</div>
         </div>
       </div>
@@ -753,7 +755,7 @@ function useEnhanced(){
   const url=CVS.toDataURL('image/jpeg',.92);S.enh.enhUrl=url;
   if(S.enh.ctx==='anc'){
     S.ancPh64=url;
-    document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none"><img class="pv" src="${url}" style="border:2px solid var(--al)"><div class="ut" style="color:var(--al)">✦ Enhanced photo</div>`;
+    document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)"><img class="pv" src="${url}" style="border:2px solid var(--al)"><div class="ut" style="color:var(--al)">✦ Enhanced photo</div>`;
   }else{
     S.wisPh64=url.split(',')[1];S.wisPhTp='image/jpeg';
     document.getElementById('wisUI').textContent='✦';document.getElementById('wisUT').textContent='Enhanced photo ready';
@@ -764,7 +766,7 @@ function useEnhanced(){
   }closeMo('enhMo');showToast('✦ Enhanced photo applied!','success');
 }
 function useOriginal(){
-  if(S.enh.ctx==='anc'){S.ancPh64=S.enh.origUrl;document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none"><img class="pv" src="${S.enh.origUrl}"><div class="ut">Tap to change photo</div>`;}
+  if(S.enh.ctx==='anc'){S.ancPh64=S.enh.origUrl;document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)"><img class="pv" src="${S.enh.origUrl}"><div class="ut">Tap to change photo</div>`;}
   else{S.wisPh64=S.enh.origUrl.split(',')[1];S.wisPhTp='image/jpeg';document.getElementById('extB').disabled=false;}
   closeMo('enhMo');showToast('Original photo used');
 }
@@ -961,10 +963,10 @@ function openEditAncMo(id){
   document.getElementById('ancL').value=a.language||'Telugu';document.getElementById('ancBy').value=a.birthYear||'';
   document.getElementById('ancDy').value=a.deathYear||'';document.getElementById('ancD').value=a.description||'';
   document.getElementById('ancEId').value=id;S.ancPh64=a.photo||null;
-  if(a.photo){document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none"><img class="pv" src="${a.photo}"><div class="ut">Tap to change</div>`;}
+  if(a.photo){document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)"><img class="pv" src="${a.photo}"><div class="ut">Tap to change</div>`;}
   else resetAncP();openMo('ancMo');
 }
-function resetAncP(){document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)" style="display:none"><div class="ui">👤</div><div class="ut">Tap to add photo</div>`;}
+function resetAncP(){document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)"><div class="ui">👤</div><div class="ut">Tap to add photo</div>`;}
 function handleAncP(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>openEnh(ev.target.result,'anc');r.readAsDataURL(f);}
 function saveAnc(){
   const name=document.getElementById('ancN').value.trim();if(!name){showToast('Please enter a name','error');return;}
