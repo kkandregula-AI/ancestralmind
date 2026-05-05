@@ -242,8 +242,73 @@ canvas{display:none}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes tPulse{0%,60%,100%{transform:translateY(0);opacity:0.5}30%{transform:translateY(-5px);opacity:1}}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* ── LIVING / EXPIRED COLOR CODING ── */
+.status-living{color:#4AE080;font-size:10px;font-family:var(--fd);letter-spacing:1px;display:inline-flex;align-items:center;gap:4px}
+.status-living::before{content:'';width:7px;height:7px;border-radius:50%;background:#4AE080;box-shadow:0 0 6px #4AE080;flex-shrink:0}
+.status-expired{color:var(--cd);font-size:10px;font-family:var(--fd);letter-spacing:1px;display:inline-flex;align-items:center;gap:4px}
+.status-expired::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--go);opacity:0.7;flex-shrink:0}
+.ac2.living{border-color:rgba(74,224,128,0.45);box-shadow:0 0 14px rgba(74,224,128,0.12)}
+.ac2.living .aav{border-color:rgba(74,224,128,0.7)}
+.ac2.expired{border-color:var(--br)}
+
+/* ── FAMILY TREE SCREEN ── */
+.tree-scr{display:none;padding:0 0 80px;background:#0E0702;min-height:100vh}
+.tree-scr.act{display:block}
+.tree-topbar{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--br);background:#0E0702;position:sticky;top:0;z-index:10}
+.tree-back{background:none;border:none;color:var(--go);font-size:20px;cursor:pointer;padding:4px}
+.tree-title{font-family:var(--fd);font-size:16px;color:var(--gl);letter-spacing:1px}
+.tree-legend{display:flex;align-items:center;gap:16px;padding:10px 16px;border-bottom:1px solid var(--br);background:#160A04}
+.tree-legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--cs)}
+.tree-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.tree-legend-dot.l{background:#4AE080;box-shadow:0 0 6px #4AE080}
+.tree-legend-dot.e{background:var(--go);opacity:0.7}
+.tree-wrap{overflow-x:auto;overflow-y:auto;padding:20px 10px;-webkit-overflow-scrolling:touch}
+.tree-svg-container{position:relative;margin:0 auto}
+/* Tree nodes */
+.tree-node{position:absolute;width:106px;cursor:pointer;transition:transform 0.15s}
+.tree-node:hover{transform:scale(1.04)}
+.tree-node-inner{background:#1C0D06;border:2px solid var(--br);border-radius:12px;padding:10px 8px;text-align:center;position:relative}
+.tree-node.living .tree-node-inner{border-color:rgba(74,224,128,0.6);box-shadow:0 0 12px rgba(74,224,128,0.18)}
+.tree-node.expired .tree-node-inner{border-color:rgba(240,168,24,0.4)}
+.tree-node-av{width:44px;height:44px;border-radius:50%;margin:0 auto 7px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:16px;font-weight:700}
+.tree-node.living .tree-node-av{background:rgba(74,224,128,0.15);border:2px solid rgba(74,224,128,0.6);color:#4AE080}
+.tree-node.expired .tree-node-av{background:rgba(240,168,24,0.12);border:2px solid rgba(240,168,24,0.4);color:var(--go)}
+.tree-node-av img{width:100%;height:100%;object-fit:cover}
+.tree-node-name{font-family:var(--fh);font-size:11px;color:var(--cr);font-weight:600;line-height:1.3;margin-bottom:3px;word-break:break-word}
+.tree-node-rel{font-size:9px;color:var(--cs);letter-spacing:0.5px;text-transform:uppercase;font-family:var(--fd);margin-bottom:3px}
+.tree-node-yr{font-size:9px;color:var(--cd);font-style:italic}
+.tree-node-status{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%}
+.tree-node.living .tree-node-status{background:#4AE080;box-shadow:0 0 5px #4AE080}
+.tree-node.expired .tree-node-status{background:var(--go);opacity:0.6}
+.tree-gen-label{position:absolute;left:4px;font-family:var(--fd);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gd);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg)}
+.tree-empty{text-align:center;padding:60px 24px;color:var(--cs)}
+.tree-empty .tei{font-size:48px;margin-bottom:16px}
+.tree-empty p{font-size:14px;line-height:1.8;color:var(--cs);margin-bottom:20px}
+
+/* Tree view button on home */
+.tree-view-btn{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 16px 16px;padding:13px;background:linear-gradient(135deg,rgba(74,224,128,0.08),rgba(64,238,228,0.06));border:1.5px solid rgba(74,224,128,0.35);border-radius:12px;cursor:pointer;color:#4AE080;font-family:var(--fd);font-size:13px;letter-spacing:1px;transition:all 0.2s}
+.tree-view-btn:hover{background:rgba(74,224,128,0.15);border-color:rgba(74,224,128,0.6)}
+/* ── SHARE / EXPORT ── */
+.share-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.share-btn{flex:1;min-width:0;padding:10px 8px;border-radius:10px;border:none;cursor:pointer;font-family:var(--fd);font-size:11px;letter-spacing:0.5px;font-weight:600;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.share-btn.wa{background:linear-gradient(135deg,#25D366,#128C7E);color:white;box-shadow:0 3px 12px rgba(37,211,102,0.35)}
+.share-btn.wa:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(37,211,102,0.5)}
+.share-btn.pdf{background:linear-gradient(135deg,#E84040,#A01010);color:white;box-shadow:0 3px 12px rgba(232,64,64,0.3)}
+.share-btn.pdf:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(232,64,64,0.45)}
+.share-btn.copy{background:rgba(240,168,24,0.12);border:1px solid var(--br);color:var(--cs)}
+.share-btn.copy:hover{background:rgba(240,168,24,0.22);border-color:var(--go)}
+.share-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+.entry-share-row{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--br)}
+.entry-share-btn{padding:7px 14px;border-radius:8px;border:none;cursor:pointer;font-size:11px;font-family:var(--fd);font-weight:600;transition:all 0.2s;display:flex;align-items:center;gap:5px}
+.entry-share-btn.ewa{background:linear-gradient(135deg,#25D366,#128C7E);color:white}
+.entry-share-btn.ecopy{background:rgba(240,168,24,0.12);border:1px solid var(--br);color:var(--cs)}
+.pdf-overlay{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;flex-direction:column;gap:16px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.pdf-overlay.show{display:flex}
+.pdf-overlay-title{font-family:var(--fd);font-size:16px;color:var(--gl);letter-spacing:1px;text-align:center}
+.pdf-overlay-sub{font-size:13px;color:var(--cs);font-style:italic;text-align:center}
+.pdf-bar{width:240px;height:6px;background:var(--bc);border-radius:3px;overflow:hidden}
+.pdf-bar-fill{height:100%;background:linear-gradient(90deg,#E84040,#FF7070);border-radius:3px;transition:width 0.4s;width:0%}
 /* ── ONBOARDING ── */
-.ob-scr{padding:0 0 40px;animation:fadeUp 0.5s ease}
 .ob-hero{text-align:center;padding:36px 24px 28px;position:relative;overflow:hidden}
 .ob-hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:360px;height:360px;background:radial-gradient(circle,rgba(240,168,24,0.13) 0%,transparent 70%);pointer-events:none}
 .ob-flame{font-size:52px;margin-bottom:14px;display:block;filter:drop-shadow(0 0 20px rgba(240,168,24,0.6))}
@@ -354,6 +419,7 @@ canvas{display:none}
       </div>
     </div>
     <div class="sl">Ancestors</div>
+    <button class="tree-view-btn" onclick="openTree()">🌳 View Family Tree</button>
     <div class="ag2" id="ancGrid"></div>
   </div>
 </div>
@@ -372,9 +438,23 @@ canvas{display:none}
   <div class="tc" id="gTab"></div>
 </div>
 
-<button class="fab fm" id="fab" onclick="fabClick()">+</button>
+<!-- FAMILY TREE SCREEN -->
+<div class="tree-scr" id="treeScr">
+  <div class="tree-topbar">
+    <button class="tree-back" onclick="closeTree()">←</button>
+    <div class="tree-title">🌳 Family Tree</div>
+  </div>
+  <div class="tree-legend">
+    <div class="tree-legend-item"><div class="tree-legend-dot l"></div>Living</div>
+    <div class="tree-legend-item"><div class="tree-legend-dot e"></div>Expired</div>
+    <div class="tree-legend-item" style="margin-left:auto;font-size:11px;color:var(--cd)">Tap any node to open</div>
+  </div>
+  <div class="tree-wrap" id="treeWrap">
+    <div class="tree-svg-container" id="treeSvgContainer"></div>
+  </div>
+</div>
 
-<!-- ENHANCE MODAL -->
+<button class="fab fm" id="fab" onclick="fabClick()">+</button>
 <div class="mo" id="enhMo">
   <div class="md" style="max-height:95vh">
     <div class="mh"></div>
@@ -470,8 +550,31 @@ canvas{display:none}
         </div>
       </div>
       <div class="fr">
-        <div class="fg"><label class="fl">Birth Year</label><input type="number" class="fi" id="ancBy" placeholder="e.g. 1920" min="1800" max="2010"></div>
+        <div class="fg"><label class="fl">Birth Year</label><input type="number" class="fi" id="ancBy" placeholder="e.g. 1920" min="1800" max="2030"></div>
         <div class="fg"><label class="fl">Death Year</label><input type="number" class="fi" id="ancDy" placeholder="If departed" min="1800" max="2030"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label class="fl">Status</label>
+          <select class="fss" id="ancStatus">
+            <option value="expired">⚰ Expired / Departed</option>
+            <option value="living">🌱 Living</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Generation</label>
+          <select class="fss" id="ancGen">
+            <option value="1">Gen 1 — Great-Grandparents</option>
+            <option value="2">Gen 2 — Grandparents</option>
+            <option value="3">Gen 3 — Parents / Aunts / Uncles</option>
+            <option value="4" selected>Gen 4 — My Generation</option>
+            <option value="5">Gen 5 — Children</option>
+            <option value="6">Gen 6 — Grandchildren</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Parent in Family Tree (optional)</label>
+        <select class="fss" id="ancParent">
+          <option value="">— No parent / top of tree —</option>
+        </select>
       </div>
     </div>
     <div class="mai">
@@ -538,7 +641,14 @@ canvas{display:none}
   </div>
   <div style="margin-top:16px;font-size:11px;color:var(--cd);letter-spacing:1px;font-family:var(--fd)">Krishnamurthy Kandregula Innovation Lab</div>
 </footer>
-<div class="lb" id="lb"><button class="lbc" onclick="closeLB()">✕</button><img id="lbI" src="" alt=""></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- PDF / SHARE OVERLAY -->
+<div class="pdf-overlay" id="pdfOverlay">
+  <div style="font-size:40px">📄</div>
+  <div class="pdf-overlay-title" id="pdfOverlayTitle">Generating Family Report…</div>
+  <div class="pdf-overlay-sub" id="pdfOverlaySub">Gathering wisdom entries…</div>
+  <div class="pdf-bar"><div class="pdf-bar-fill" id="pdfBarFill"></div></div>
+</div><button class="lbc" onclick="closeLB()">✕</button><img id="lbI" src="" alt=""></div>
 <div class="toast" id="toast"></div>
 <canvas id="cvs"></canvas><canvas id="cvs2"></canvas>
 
@@ -789,10 +899,16 @@ function renderHome(){
   const g=document.getElementById('ancGrid');let h='';
   S.ancestors.forEach((a,i)=>{
     const wc=(a.wisdomEntries||[]).length;
-    h+=`<div class="ac2" onclick="openAnc('${a.id}')" style="animation-delay:${i*.07}s">
+    const isLiving=a.status==='living';
+    const statusBadge=isLiving
+      ?`<span class="status-living">Living</span>`
+      :`<span class="status-expired">${a.deathYear?'Expired':''}</span>`;
+    h+=`<div class="ac2 ${isLiving?'living':'expired'}" onclick="openAnc('${a.id}')" style="animation-delay:${i*.07}s">
       ${wc?`<div class="abd">${wc} 📜</div>`:''}
       <div class="aav">${a.photo?`<img src="${a.photo}">`:`<div class="ini">${ini(a.name)}</div>`}${a.phEnh?'<div class="eb">✦</div>':''}</div>
-      <div class="an">${a.name}</div><div class="ar">${a.relation}</div><div class="ay">${fmtY(a.birthYear,a.deathYear)}</div>
+      <div class="an">${a.name}</div><div class="ar">${a.relation}</div>
+      <div class="ay">${fmtY(a.birthYear,a.deathYear)}</div>
+      <div style="text-align:center;margin-top:5px">${statusBadge}</div>
     </div>`;
   });
   h+=`<div class="aac" onclick="openAddAncMo()"><div class="pl">+</div><span>Add Ancestor</span><span class="bfree" style="margin-top:6px">FREE</span></div>`;
@@ -800,31 +916,139 @@ function renderHome(){
 }
 
 function loadSampleAncestor(){
-  const sample={
-    id:gid(),
-    name:'Venkata Rao Kandregula',
-    relation:'Grandfather (Thatha)',
-    language:'Telugu',
-    birthYear:'1918',
-    deathYear:'1992',
-    description:'A deeply principled man who believed hard work and integrity were inseparable. He spoke in Telugu proverbs, rose before sunrise every day, and never raised his voice — yet every word he said carried the weight of mountains. He had a particular love for jasmine flowers, classical Carnatic music, and feeding strangers.',
-    photo:null,
-    phEnh:false,
-    essence:null,
-    wisdomEntries:[
-      {id:gid(),type:'Saying',text:'నీరు తక్కువగా ఉన్నప్పుడు, చేను నీటిని నమ్ముకుంటుంది — When water is scarce, the field trusts the rain will come. Worry is the drought you bring upon yourself.',timestamp:Date.now()-86400000*30},
-      {id:gid(),type:'Life Lesson',text:'He always said: never borrow money to celebrate. Celebrate when the harvest comes in, not when it is still in the ground. Joy that is borrowed carries someone else\'s grief.',timestamp:Date.now()-86400000*20},
-      {id:gid(),type:'Story',text:'During the drought of 1953, when other farmers abandoned their fields, Thatha stayed. He mortgaged his gold ring to buy seeds and told Paati — "The land fed my father. I will not leave it when it is hungry." That year the rains came late, but they came. He always said the land remembers loyalty.',timestamp:Date.now()-86400000*10},
-      {id:gid(),type:'Belief',text:'He believed every house needs three things to truly be a home: a tulsi plant in the courtyard, food cooking on the stove, and an elder who still tells stories. Without any one of these, it is just a building.',timestamp:Date.now()-86400000*5},
-      {id:gid(),type:'Memory',text:'Every Sankranti morning, he would wake before anyone and draw the first kolam himself — outside the front door. When asked why, he said: "The first welcome of the new year should come from the man of the house. It tells the gods we are ready."',timestamp:Date.now()-86400000*2},
-    ]
-  };
-  S.ancestors.push(sample);
+  const pid=gid(),mid=gid(),fid=gid(),uid=gid(),selfd=gid();
+  const samples=[
+    {id:pid,name:'Venkata Rao Kandregula',relation:'Great-Grandfather',language:'Telugu',birthYear:'1895',deathYear:'1968',status:'expired',generation:1,parentId:null,description:'A deeply principled patriarch. Spoke only Telugu proverbs. Rose before sunrise. Never raised his voice.',photo:null,phEnh:false,essence:null,wisdomEntries:[
+      {id:gid(),type:'Saying',text:'నీరు తక్కువగా ఉన్నప్పుడు, చేను నీటిని నమ్ముకుంటుంది — When water is scarce, the field trusts the rain will come.',timestamp:Date.now()-86400000*40},
+    ]},
+    {id:mid,name:'Subbamma Kandregula',relation:'Great-Grandmother',language:'Telugu',birthYear:'1900',deathYear:'1975',status:'expired',generation:1,parentId:null,description:'Matriarch of the family. Known for her cooking and healing knowledge with herbs.',photo:null,phEnh:false,essence:null,wisdomEntries:[
+      {id:gid(),type:'Belief',text:'She believed the kitchen is the soul of the house. Food cooked with worry makes the eater worry. Cook only when your heart is calm.',timestamp:Date.now()-86400000*35},
+    ]},
+    {id:fid,name:'Krishnamurthy Rao Kandregula',relation:'Grandfather (Thatha)',language:'Telugu',birthYear:'1928',deathYear:'1992',status:'expired',generation:2,parentId:pid,description:'Son of Venkata Rao. Farmer and teacher. Loved Carnatic music and jasmine flowers.',photo:null,phEnh:false,essence:null,wisdomEntries:[
+      {id:gid(),type:'Story',text:'During the drought of 1953, when others abandoned their fields, Thatha stayed. He mortgaged his gold ring to buy seeds. "The land fed my father. I will not leave it when it is hungry."',timestamp:Date.now()-86400000*20},
+      {id:gid(),type:'Life Lesson',text:'Never borrow money to celebrate. Celebrate when the harvest comes in, not when it is still in the ground.',timestamp:Date.now()-86400000*15},
+    ]},
+    {id:uid,name:'Satyavathi Kandregula',relation:'Grandmother (Avva)',language:'Telugu',birthYear:'1932',deathYear:'2005',status:'expired',generation:2,parentId:mid,description:'Quiet strength. Kept the family united across three generations. Made the best pesarattu in the village.',photo:null,phEnh:false,essence:null,wisdomEntries:[
+      {id:gid(),type:'Memory',text:'Every Sankranti morning, she would wake before anyone and draw the first kolam outside the front door. "The first welcome of the new year should come from the woman of the house."',timestamp:Date.now()-86400000*10},
+    ]},
+    {id:selfd,name:'Your Father',relation:'Father (Nanna)',language:'Telugu',birthYear:'1958',deathYear:null,status:'living',generation:3,parentId:fid,description:'Add your own details here.',photo:null,phEnh:false,essence:null,wisdomEntries:[]},
+  ];
+  S.ancestors.push(...samples);
   saveS();
-  showToast('Sample ancestor loaded ✦ Explore freely!','success');
+  showToast('Sample family loaded ✦ Explore the tree!','success');
   renderHome();
-  // Open the ancestor immediately
-  setTimeout(()=>openAnc(sample.id),400);
+  setTimeout(()=>openTree(),400);
+}
+
+// ── FAMILY TREE ──────────────────────────────────────────
+function populateParentDropdown(currentId,selectedId=''){
+  const sel=document.getElementById('ancParent');
+  sel.innerHTML=`<option value="">— No parent / top of tree —</option>`;
+  S.ancestors.filter(a=>a.id!==currentId).forEach(a=>{
+    const opt=document.createElement('option');
+    opt.value=a.id;opt.textContent=`${a.name} (${a.relation})`;
+    if(a.id===selectedId)opt.selected=true;
+    sel.appendChild(opt);
+  });
+}
+
+function openTree(){
+  document.getElementById('homeScr').classList.remove('act');
+  document.getElementById('detScr').classList.remove('act');
+  document.getElementById('treeScr').classList.add('act');
+  document.getElementById('fab').classList.remove('vis');
+  document.getElementById('appFooter').style.display='none';
+  renderTree();
+}
+function closeTree(){
+  document.getElementById('treeScr').classList.remove('act');
+  document.getElementById('homeScr').classList.add('act');
+  document.getElementById('appFooter').style.display='block';
+  renderHome();
+}
+
+function renderTree(){
+  const container=document.getElementById('treeSvgContainer');
+  if(!S.ancestors.length){
+    container.innerHTML=`<div class="tree-empty"><div class="tei">🌳</div><p>No ancestors yet.<br>Add family members to build your tree.</p><button class="ob-cta" onclick="closeTree();setTimeout(openAddAncMo,200)" style="max-width:240px">+ Add First Member</button></div>`;
+    return;
+  }
+
+  // Group by generation
+  const gens={};
+  S.ancestors.forEach(a=>{
+    const g=a.generation||4;
+    if(!gens[g])gens[g]=[];
+    gens[g].push(a);
+  });
+  const genKeys=Object.keys(gens).map(Number).sort((a,b)=>a-b);
+
+  // Layout constants
+  const NODE_W=110,NODE_H=100,H_GAP=16,V_GAP=60,PAD_X=40,PAD_Y=30;
+  const maxPerRow=Math.max(...genKeys.map(g=>gens[g].length));
+  const totalW=Math.max(maxPerRow*(NODE_W+H_GAP)+PAD_X*2, 340);
+  const totalH=genKeys.length*(NODE_H+V_GAP)+PAD_Y*2;
+
+  // Calculate node positions
+  const positions={};
+  genKeys.forEach((g,gi)=>{
+    const row=gens[g];
+    const rowW=row.length*(NODE_W+H_GAP)-H_GAP;
+    const startX=(totalW-rowW)/2;
+    const y=PAD_Y+gi*(NODE_H+V_GAP);
+    row.forEach((a,idx)=>{
+      const x=startX+idx*(NODE_W+H_GAP);
+      positions[a.id]={x,y,cx:x+NODE_W/2,cy:y+NODE_H/2};
+    });
+  });
+
+  // Build SVG lines
+  const genLabels=genKeys.map((g,gi)=>{
+    const y=PAD_Y+gi*(NODE_H+V_GAP)+NODE_H/2;
+    const labels={1:'Gen 1',2:'Gen 2',3:'Gen 3',4:'Gen 4',5:'Gen 5',6:'Gen 6'};
+    return `<text x="12" y="${y+5}" font-family="Cinzel,serif" font-size="9" fill="#B08830" letter-spacing="1" text-anchor="start" transform="rotate(-90,12,${y})">${labels[g]||'Gen '+g}</text>`;
+  }).join('');
+
+  const lines=S.ancestors.filter(a=>a.parentId&&positions[a.id]&&positions[a.parentId]).map(a=>{
+    const child=positions[a.id];
+    const par=positions[a.parentId];
+    const isLiving=a.status==='living';
+    const c1x=par.cx,c1y=par.y+NODE_H+20,c2x=child.cx,c2y=child.y-20;
+    return `<path d="M${par.cx},${par.y+NODE_H} C${c1x},${c1y} ${c2x},${c2y} ${child.cx},${child.y}" 
+      stroke="${isLiving?'rgba(74,224,128,0.45)':'rgba(240,168,24,0.35)'}" 
+      stroke-width="2" fill="none" stroke-dasharray="${isLiving?'none':'4,3'}"/>`;
+  }).join('');
+
+  // Build HTML nodes
+  const nodes=S.ancestors.map(a=>{
+    if(!positions[a.id])return '';
+    const p=positions[a.id];
+    const isLiving=a.status==='living';
+    const av=a.photo
+      ?`<img src="${a.photo}" style="width:100%;height:100%;object-fit:cover">`
+      :`${ini(a.name)}`;
+    const shortName=a.name.split(' ').slice(0,2).join(' ');
+    const shortRel=a.relation.replace(' (Thatha)','').replace(' (Avva)','').replace(' (Nanna)','').replace(' (Amma)','');
+    return `<div class="tree-node ${isLiving?'living':'expired'}" 
+      style="left:${p.x}px;top:${p.y}px" 
+      onclick="closeTree();setTimeout(()=>openAnc('${a.id}'),200)">
+      <div class="tree-node-inner">
+        <div class="tree-node-status"></div>
+        <div class="tree-node-av">${av}</div>
+        <div class="tree-node-name">${shortName}</div>
+        <div class="tree-node-rel">${shortRel}</div>
+        <div class="tree-node-yr">${fmtY(a.birthYear,a.deathYear)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  container.style.width=totalW+'px';
+  container.style.height=totalH+'px';
+  container.innerHTML=`
+    <svg style="position:absolute;top:0;left:0;width:${totalW}px;height:${totalH}px;pointer-events:none;overflow:visible">
+      ${genLabels}${lines}
+    </svg>
+    ${nodes}`;
 }
 function renderDet(){
   const a=ga();if(!a)return;
@@ -847,14 +1071,34 @@ function renderTab(t){const a=ga();if(!a)return;if(t==='w')renderW(a);else if(t=
 
 function renderW(a){
   const el=document.getElementById('wTab'),entries=a.wisdomEntries||[];
-  let h=`<div class="fz"><div class="fzl"><span class="bfree">FREE</span> Wisdom Vault</div><div class="fzb"><button class="awb" onclick="openWisMo()">+ Add Wisdom or Memory</button>`;
+  let h=`<div class="fz"><div class="fzl"><span class="bfree">FREE</span> Wisdom Vault</div><div class="fzb">
+    <div class="share-bar">
+      <button class="share-btn wa" onclick="shareAllWhatsApp('${a.id}')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.852L.057 23.629a.5.5 0 0 0 .615.612l5.928-1.556A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.886 0-3.65-.52-5.166-1.427l-.371-.22-3.846 1.01 1.028-3.735-.242-.385A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Share All on WhatsApp
+      </button>
+      <button class="share-btn pdf" onclick="exportPDF('${a.id}')">
+        📄 Export PDF Report
+      </button>
+    </div>
+    <button class="awb" onclick="openWisMo()">+ Add Wisdom or Memory</button>`;
   if(!entries.length)h+=`<div class="empty"><div class="ei">📜</div><p>No entries yet.<br>Add stories, sayings, lessons,<br>or upload old photos & letters.</p></div>`;
-  else entries.slice().reverse().forEach(w=>{h+=`<div class="we">
+  else entries.slice().reverse().forEach(w=>{
+    const txt=w.text||'';
+    const preview=txt.length>120?txt.substring(0,120)+'…':txt;
+    h+=`<div class="we">
     <button class="wdl" onclick="delWis('${a.id}','${w.id}')">✕</button>
     <div class="wty">${tIcon(w.type)} ${w.type}${w.imgEnh?` <span class="bai" style="font-size:9px">AI Enhanced</span>`:''}</div>
     ${w.image?`<img class="wim${w.imgEnh?' enh':''}" src="${w.image}" onclick="openLB(this.src)">`:''}
     ${w.text?`<div class="wtx">${w.text.replace(/\n/g,'<br>')}</div>`:''}
     <div class="wdt">${new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</div>
+    <div class="entry-share-row">
+      <button class="entry-share-btn ewa" onclick="shareEntryWhatsApp('${a.id}','${w.id}')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.852L.057 23.629a.5.5 0 0 0 .615.612l5.928-1.556A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.886 0-3.65-.52-5.166-1.427l-.371-.22-3.846 1.01 1.028-3.735-.242-.385A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        WhatsApp
+      </button>
+      <button class="entry-share-btn ecopy" onclick="copyEntry('${a.id}','${w.id}')">📋 Copy</button>
+    </div>
   </div>`;});
   h+=`</div></div>`;el.innerHTML=h;
 }
@@ -954,7 +1198,11 @@ function openAddAncMo(){
   document.getElementById('ancMoT').textContent='✦ Add Ancestor';
   ['ancN','ancBy','ancDy','ancD'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('ancR').selectedIndex=0;document.getElementById('ancL').selectedIndex=0;
-  document.getElementById('ancEId').value='';S.ancPh64=null;resetAncP();openMo('ancMo');
+  document.getElementById('ancStatus').value='expired';
+  document.getElementById('ancGen').value='4';
+  document.getElementById('ancEId').value='';S.ancPh64=null;resetAncP();
+  populateParentDropdown('');
+  openMo('ancMo');
 }
 function openEditAncMo(id){
   const a=S.ancestors.find(x=>x.id===id);if(!a)return;
@@ -962,7 +1210,10 @@ function openEditAncMo(id){
   document.getElementById('ancN').value=a.name;document.getElementById('ancR').value=a.relation;
   document.getElementById('ancL').value=a.language||'Telugu';document.getElementById('ancBy').value=a.birthYear||'';
   document.getElementById('ancDy').value=a.deathYear||'';document.getElementById('ancD').value=a.description||'';
+  document.getElementById('ancStatus').value=a.status||'expired';
+  document.getElementById('ancGen').value=a.generation||'4';
   document.getElementById('ancEId').value=id;S.ancPh64=a.photo||null;
+  populateParentDropdown(id,a.parentId||'');
   if(a.photo){document.getElementById('ancPa').innerHTML=`<input type="file" id="ancPi" accept="image/*" onchange="handleAncP(event)"><img class="pv" src="${a.photo}"><div class="ut">Tap to change</div>`;}
   else resetAncP();openMo('ancMo');
 }
@@ -972,7 +1223,17 @@ function saveAnc(){
   const name=document.getElementById('ancN').value.trim();if(!name){showToast('Please enter a name','error');return;}
   const eid=document.getElementById('ancEId').value;
   const phEnh=!!(S.enh.enhUrl&&S.enh.ctx==='anc');
-  const data={name,relation:document.getElementById('ancR').value,language:document.getElementById('ancL').value,birthYear:document.getElementById('ancBy').value||null,deathYear:document.getElementById('ancDy').value||null,description:document.getElementById('ancD').value.trim(),photo:S.ancPh64,phEnh};
+  const data={
+    name,relation:document.getElementById('ancR').value,
+    language:document.getElementById('ancL').value,
+    birthYear:document.getElementById('ancBy').value||null,
+    deathYear:document.getElementById('ancDy').value||null,
+    description:document.getElementById('ancD').value.trim(),
+    photo:S.ancPh64,phEnh,
+    status:document.getElementById('ancStatus').value,
+    generation:parseInt(document.getElementById('ancGen').value)||4,
+    parentId:document.getElementById('ancParent').value||null
+  };
   if(eid){const idx=S.ancestors.findIndex(a=>a.id===eid);if(idx>-1){S.ancestors[idx]={...S.ancestors[idx],...data};showToast('Updated ✦','success');}}
   else{S.ancestors.push({id:gid(),wisdomEntries:[],essence:null,...data});showToast('Ancestor added ✦','success');}
   saveS();closeMo('ancMo');if(eid&&S.curId===eid)renderDet();else renderHome();
@@ -1002,7 +1263,188 @@ function saveWis(){
 }
 function delWis(aId,wId){const a=S.ancestors.find(x=>x.id===aId);if(!a)return;a.wisdomEntries=a.wisdomEntries.filter(w=>w.id!==wId);a.essence=null;saveS();renderDet();renderTab(S.curTab);showToast('Entry removed');}
 
-// ── MODALS ──
+// ── SHARE & EXPORT ──────────────────────────────────────
+
+// Share single wisdom entry on WhatsApp
+function shareEntryWhatsApp(aId,wId){
+  const a=S.ancestors.find(x=>x.id===aId);
+  const w=a?.wisdomEntries?.find(x=>x.id===wId);
+  if(!a||!w)return;
+  const txt=buildEntryText(a,w);
+  const url=`https://wa.me/?text=${encodeURIComponent(txt)}`;
+  window.open(url,'_blank');
+}
+
+// Share all wisdom entries of an ancestor on WhatsApp
+function shareAllWhatsApp(aId){
+  const a=S.ancestors.find(x=>x.id===aId);
+  if(!a)return;
+  const entries=a.wisdomEntries||[];
+  if(!entries.length){showToast('No entries to share yet','error');return;}
+  let txt=`🕯️ *${a.name}* — ${a.relation}\n`;
+  txt+=`${fmtY(a.birthYear,a.deathYear)}\n`;
+  if(a.description)txt+=`_"${a.description}"_\n`;
+  txt+=`\n*Wisdom & Memories* (${entries.length} entries)\n`;
+  txt+=`${'─'.repeat(30)}\n\n`;
+  entries.forEach((w,i)=>{
+    txt+=`*${i+1}. ${tIcon(w.type)} ${w.type}*\n`;
+    if(w.text)txt+=`${w.text}\n`;
+    txt+=`_${new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}_\n\n`;
+  });
+  txt+=`\n🌳 Preserved on AncestralMind\n_ancestralmind.vercel.app_`;
+  const url=`https://wa.me/?text=${encodeURIComponent(txt)}`;
+  window.open(url,'_blank');
+}
+
+function buildEntryText(a,w){
+  let txt=`🕯️ *${a.name}* — ${a.relation}\n\n`;
+  txt+=`*${tIcon(w.type)} ${w.type}*\n`;
+  if(w.text)txt+=`"${w.text}"\n`;
+  txt+=`\n_${new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}_`;
+  txt+=`\n\n🌳 _Preserved on AncestralMind — ancestralmind.vercel.app_`;
+  return txt;
+}
+
+// Copy a single entry to clipboard
+function copyEntry(aId,wId){
+  const a=S.ancestors.find(x=>x.id===aId);
+  const w=a?.wisdomEntries?.find(x=>x.id===wId);
+  if(!a||!w)return;
+  const txt=buildEntryText(a,w).replace(/\*/g,'').replace(/_/g,'');
+  navigator.clipboard?.writeText(txt).then(()=>showToast('Copied to clipboard ✓','success'))
+    .catch(()=>showToast('Copy failed — try long-pressing','error'));
+}
+
+// ── PDF EXPORT ───────────────────────────────────────────
+async function exportPDF(aId){
+  const a=S.ancestors.find(x=>x.id===aId);
+  if(!a){showToast('Ancestor not found','error');return;}
+  const entries=a.wisdomEntries||[];
+
+  showPdfProgress('Building Family Report…','Preparing document…',5);
+  await sl(100);
+
+  // Wait for jsPDF to load
+  if(!window.jspdf?.jsPDF){showToast('PDF library loading… try again in a moment','error');hidePdfProgress();return;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const PW=210,PH=297,ML=18,MR=18,MT=20,usableW=PW-ML-MR;
+  let y=MT;
+
+  // ── HELPERS ──
+  function addPage(){doc.addPage();y=MT;}
+  function checkY(need=10){if(y+need>PH-16)addPage();}
+  function setFont(style,size,color=[30,15,5]){
+    doc.setFont('helvetica',style);doc.setFontSize(size);doc.setTextColor(...color);
+  }
+  function line(x1,y1,x2,y2,color=[201,149,42],w=0.4){
+    doc.setDrawColor(...color);doc.setLineWidth(w);doc.line(x1,y1,x2,y2);
+  }
+  function wrap(text,x,maxW,lineH=5.5){
+    const lines=doc.splitTextToSize(text,maxW);
+    lines.forEach(l=>{checkY(lineH);doc.text(l,x,y);y+=lineH;});
+    return lines.length;
+  }
+
+  showPdfProgress('Building Family Report…','Drawing header…',20);
+  await sl(80);
+
+  // ── COVER HEADER ──
+  doc.setFillColor(14,7,2);doc.rect(0,0,PW,42,'F');
+  doc.setFillColor(30,15,6);doc.rect(0,42,PW,2,'F');
+  // Flame icon area
+  doc.setFillColor(201,149,42);doc.circle(PW/2,18,9,'F');
+  setFont('bold',10,[14,7,2]);doc.text('🕯',PW/2,21,{align:'center'});
+  setFont('bold',18,[240,200,80]);
+  doc.text('AncestralMind',PW/2,32,{align:'center'});
+  setFont('normal',8,[160,130,80]);
+  doc.text('LIVING FAMILY WISDOM',PW/2,38,{align:'center',charSpace:2});
+  y=52;
+
+  // ── ANCESTOR HEADER ──
+  setFont('bold',16,[240,200,80]);doc.text(a.name,ML,y);y+=7;
+  setFont('normal',10,[200,160,80]);
+  doc.text(`${a.relation}  •  ${fmtY(a.birthYear,a.deathYear)}`,ML,y);y+=5;
+  const statusTxt=a.status==='living'?'🌱 Living':'⚰ Departed';
+  setFont('italic',9,[160,130,80]);doc.text(statusTxt,ML,y);y+=8;
+  line(ML,y,PW-MR,y);y+=6;
+
+  if(a.description){
+    setFont('italic',10,[220,190,130]);
+    wrap(`"${a.description}"`,ML,usableW,6);
+    y+=4;line(ML,y,PW-MR,y,[80,60,30]);y+=6;
+  }
+
+  showPdfProgress('Building Family Report…','Writing wisdom entries…',50);
+  await sl(80);
+
+  // ── WISDOM ENTRIES ──
+  if(entries.length){
+    setFont('bold',12,[240,168,24]);doc.text(`Wisdom & Memories  (${entries.length})`,ML,y);y+=7;
+
+    entries.forEach((w,i)=>{
+      checkY(20);
+      // Entry box background
+      const startY=y;
+      setFont('bold',9,[240,168,24]);
+      doc.text(`${String(i+1).padStart(2,'0')}  ${tIcon(w.type)} ${w.type.toUpperCase()}`,ML,y);
+      setFont('italic',8,[160,130,80]);
+      doc.text(new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}),PW-MR,y,{align:'right'});
+      y+=5;line(ML,y,PW-MR,y,[60,40,15],0.2);y+=5;
+
+      if(w.text){
+        setFont('normal',10,[250,240,220]);
+        wrap(w.text,ML,usableW,5.5);
+      }
+      y+=6;
+      // Bottom rule
+      if(i<entries.length-1){line(ML,y,PW-MR,y,[40,25,8],0.15);y+=4;}
+    });
+  }else{
+    checkY(12);setFont('italic',10,[160,130,80]);
+    doc.text('No wisdom entries recorded yet.',ML,y);y+=10;
+  }
+
+  // ── AI ESSENCE ──
+  if(a.essence){
+    checkY(30);y+=4;
+    doc.setFillColor(30,15,40);doc.roundedRect(ML,y,usableW,6,'F');
+    setFont('bold',9,[176,126,224]);doc.text('✦  LIFE PHILOSOPHY  —  AI GENERATED',ML+3,y+4);y+=10;
+    setFont('italic',10,[220,190,255]);wrap(a.essence,ML,usableW,5.5);y+=6;
+  }
+
+  showPdfProgress('Building Family Report…','Adding footer…',85);
+  await sl(60);
+
+  // ── FOOTER ──
+  const totalPages=doc.getNumberOfPages();
+  for(let p=1;p<=totalPages;p++){
+    doc.setPage(p);
+    line(ML,PH-12,PW-MR,PH-12,[80,60,20],0.3);
+    setFont('normal',7,[120,90,40]);
+    doc.text('AncestralMind  •  ancestralmind.vercel.app  •  Designed by Kandregula Krishnamurthy',ML,PH-7);
+    doc.text(`Page ${p} of ${totalPages}`,PW-MR,PH-7,{align:'right'});
+  }
+
+  showPdfProgress('Done!','Downloading…',100);
+  await sl(400);
+
+  const fileName=`${a.name.replace(/\s+/g,'_')}_AncestralMind.pdf`;
+  doc.save(fileName);
+  hidePdfProgress();
+  showToast(`📄 PDF saved: ${a.name}`,'success');
+}
+
+function showPdfProgress(title,sub,pct){
+  const ov=document.getElementById('pdfOverlay');
+  document.getElementById('pdfOverlayTitle').textContent=title;
+  document.getElementById('pdfOverlaySub').textContent=sub;
+  document.getElementById('pdfBarFill').style.width=pct+'%';
+  ov.classList.add('show');
+}
+function hidePdfProgress(){document.getElementById('pdfOverlay').classList.remove('show');}
+
+// ── END SHARE & EXPORT ───────────────────────────────────
 function openMo(id){document.getElementById(id).classList.add('op');}
 function closeMo(id){document.getElementById(id).classList.remove('op');}
 window.addEventListener('click',e=>{if(e.target.classList.contains('mo'))e.target.classList.remove('op');});
