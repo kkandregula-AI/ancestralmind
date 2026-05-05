@@ -660,8 +660,8 @@ const CVS=document.getElementById('cvs'),CVS2=document.getElementById('cvs2');
 const CX=CVS.getContext('2d'),CX2=CVS2.getContext('2d');
 
 function init(){loadS();regSW();renderHome();updApiBtn();initSlider();}
-function loadS(){try{const s=localStorage.getItem('am8');if(s){const d=JSON.parse(s);if(d&&Array.isArray(d.ancestors))Object.assign(S,d);}}catch(e){console.warn('State load error:',e);}S.chatH=S.chatH||{};S.apiKey=localStorage.getItem('amk')||'';}
-function saveS(){localStorage.setItem('am8',JSON.stringify({ancestors:S.ancestors,chatH:S.chatH}));}
+function loadS(){try{const s=localStorage.getItem('am7');if(s)Object.assign(S,JSON.parse(s));}catch(e){}S.chatH=S.chatH||{};S.apiKey=localStorage.getItem('amk')||'';}
+function saveS(){localStorage.setItem('am7',JSON.stringify({ancestors:S.ancestors,chatH:S.chatH}));}
 function hasAI(){return!!S.apiKey;}
 function updApiBtn(){const b=document.getElementById('apiBtn');if(hasAI()){b.textContent='✦ AI Connected';b.className='apib conn';}else{b.textContent='✦ AI Setup';b.className='apib';}}
 function regSW(){if(!('serviceWorker'in navigator))return;const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('fetch',()=>{});`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})));}
@@ -1070,32 +1070,39 @@ function renderEss(a){
 function renderTab(t){const a=ga();if(!a)return;if(t==='w')renderW(a);else if(t==='o')renderO(a);else renderG(a);}
 
 function renderW(a){
-  var el=document.getElementById('wTab'),en=a.wisdomEntries||[],aid=a.id;
-  var h='<div class="fz"><div class="fzl"><span class="bfree">FREE</span> Wisdom Vault</div><div class="fzb">';
-  h+='<div class="share-bar">';
-  h+='<button class="share-btn wa" data-aid="'+aid+'" onclick="shareAllWhatsApp(this.dataset.aid)">&#x1F4F2; Share All on WhatsApp</button>';
-  h+='<button class="share-btn pdf" data-aid="'+aid+'" onclick="exportPDF(this.dataset.aid)">&#x1F4C4; Export PDF</button>';
-  h+='</div><button class="awb" onclick="openWisMo()">+ Add Wisdom or Memory</button>';
-  if(!en.length){
-    h+='<div class="empty"><div class="ei">&#x1F4DC;</div><p>No entries yet. Add stories, sayings or memories.</p></div>';
-  }else{
-    en.slice().reverse().forEach(function(w){
-      var enh=w.imgEnh?' <span class="bai" style="font-size:9px">Enhanced</span>':'';
-      var iH=w.image?('<img class="wim'+(w.imgEnh?' enh':'')+'\" data-src="'+w.image+'" src="'+w.image+'" onclick="openLB(this.src)">'):'';
-      var tH=w.text?('<div class="wtx">'+w.text.replace(/\n/g,'<br>')+'</div>'):'';
-      var dt=new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
-      h+='<div class="we">';
-      h+='<button class="wdl" data-aid="'+aid+'" data-wid="'+w.id+'" onclick="delWis(this.dataset.aid,this.dataset.wid)">&#x2715;</button>';
-      h+='<div class="wty">'+tIcon(w.type)+' '+w.type+enh+'</div>';
-      h+=iH+tH+'<div class="wdt">'+dt+'</div>';
-      h+='<div class="entry-share-row">';
-      h+='<button class="entry-share-btn ewa" data-aid="'+aid+'" data-wid="'+w.id+'" onclick="shareEntryWhatsApp(this.dataset.aid,this.dataset.wid)">&#x1F4F2; WhatsApp</button>';
-      h+='<button class="entry-share-btn ecopy" data-aid="'+aid+'" data-wid="'+w.id+'" onclick="copyEntry(this.dataset.aid,this.dataset.wid)">&#x1F4CB; Copy</button>';
-      h+='</div></div>';
-    });
-  }
-  h+='</div></div>';el.innerHTML=h;
+  const el=document.getElementById('wTab'),entries=a.wisdomEntries||[];
+  let h=`<div class="fz"><div class="fzl"><span class="bfree">FREE</span> Wisdom Vault</div><div class="fzb">
+    <div class="share-bar">
+      <button class="share-btn wa" onclick="shareAllWhatsApp('${a.id}')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.852L.057 23.629a.5.5 0 0 0 .615.612l5.928-1.556A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.886 0-3.65-.52-5.166-1.427l-.371-.22-3.846 1.01 1.028-3.735-.242-.385A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Share All on WhatsApp
+      </button>
+      <button class="share-btn pdf" onclick="exportPDF('${a.id}')">
+        📄 Export PDF Report
+      </button>
+    </div>
+    <button class="awb" onclick="openWisMo()">+ Add Wisdom or Memory</button>`;
+  if(!entries.length)h+=`<div class="empty"><div class="ei">📜</div><p>No entries yet.<br>Add stories, sayings, lessons,<br>or upload old photos & letters.</p></div>`;
+  else entries.slice().reverse().forEach(w=>{
+    const txt=w.text||'';
+    const preview=txt.length>120?txt.substring(0,120)+'…':txt;
+    h+=`<div class="we">
+    <button class="wdl" onclick="delWis('${a.id}','${w.id}')">✕</button>
+    <div class="wty">${tIcon(w.type)} ${w.type}${w.imgEnh?` <span class="bai" style="font-size:9px">AI Enhanced</span>`:''}</div>
+    ${w.image?`<img class="wim${w.imgEnh?' enh':''}" src="${w.image}" onclick="openLB(this.src)">`:''}
+    ${w.text?`<div class="wtx">${w.text.replace(/\n/g,'<br>')}</div>`:''}
+    <div class="wdt">${new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</div>
+    <div class="entry-share-row">
+      <button class="entry-share-btn ewa" onclick="shareEntryWhatsApp('${a.id}','${w.id}')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.852L.057 23.629a.5.5 0 0 0 .615.612l5.928-1.556A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.886 0-3.65-.52-5.166-1.427l-.371-.22-3.846 1.01 1.028-3.735-.242-.385A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        WhatsApp
+      </button>
+      <button class="entry-share-btn ecopy" onclick="copyEntry('${a.id}','${w.id}')">📋 Copy</button>
+    </div>
+  </div>`;});
+  h+=`</div></div>`;el.innerHTML=h;
 }
+
 function renderO(a){
   const el=document.getElementById('oTab');
   if(!hasAI()){el.innerHTML=`<div class="az"><div class="azl"><span class="bai">AI POWERED</span> Oracle Chat</div><div class="azb"><div class="aig"><div class="aig-i">🔮</div><div class="aig-t">Talk to ${fn(a.name)}</div><div class="aig-d">Connect AI to have real conversations drawn from the wisdom you've preserved.</div><div class="aig-fs"><div class="aig-f"><span>🗣️</span>Speaks in their voice & personality</div><div class="aig-f"><span>📜</span>Draws from recorded wisdom</div><div class="aig-f"><span>🌏</span>Responds in their cultural tone</div><div class="aig-f"><span>🎨</span>Can colorize your B&W photos</div></div><button class="ubtn" onclick="openMo('apiMo')">✦ Setup AI — Free API Key</button></div></div></div>`;return;}
