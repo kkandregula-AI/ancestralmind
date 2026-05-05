@@ -603,8 +603,11 @@ const CVS=document.getElementById('cvs'),CVS2=document.getElementById('cvs2');
 const CX=CVS.getContext('2d'),CX2=CVS2.getContext('2d');
 
 function init(){loadS();regSW();renderHome();updApiBtn();initSlider();}
-function loadS(){try{const s=localStorage.getItem('am9');if(s)Object.assign(S,JSON.parse(s));}catch(e){}}
-function saveS(){localStorage.setItem('am9',JSON.stringify({ancestors:S.ancestors}));}
+function loadS(){try{const s=localStorage.getItem('am9');if(s){const d=JSON.parse(s);if(d&&Array.isArray(d.ancestors))Object.assign(S,d);}}catch(e){}S.chatH=S.chatH||{};S.apiKey=localStorage.getItem('amk')||'';}
+function saveS(){localStorage.setItem('am9',JSON.stringify({ancestors:S.ancestors,chatH:S.chatH}));}
+function hasAI(){return S.apiKey.length>10;}
+function updApiBtn(){const b=document.getElementById('apiBtn');if(!b)return;if(hasAI()){b.textContent='✦ AI Connected';b.className='apib conn';}else{b.textContent='✦ AI Setup';b.className='apib';}}
+function saveApiKey(){const inp=document.getElementById('apiKeyInp');const k=(inp?inp.value:'').trim();if(k.length<20){showToast('Please enter a valid API key','error');return;}localStorage.setItem('amk',k);S.apiKey=k;updApiBtn();closeMo('apiMo');showToast('✦ AI Connected!','ai');if(S.curId&&S.curTab==='o')renderTab('o');}
 function regSW(){if(!('serviceWorker'in navigator))return;navigator.serviceWorker.register(URL.createObjectURL(new Blob([`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('fetch',()=>{});`],{type:'application/javascript'})));}
 
 // ── CANVAS PHOTO ENGINE ──
