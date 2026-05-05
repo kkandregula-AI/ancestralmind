@@ -201,7 +201,20 @@ body{background:#0E0702;background-color:#0E0702;color:#FEFAF2;color:var(--cr);f
 .tree-scr.act{display:block}
 .tree-topbar{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--br);background:#0E0702;position:sticky;top:0;z-index:10}
 .tree-back{background:none;border:none;color:var(--go);font-size:20px;cursor:pointer;padding:4px}
-.tree-title{font-family:var(--fd);font-size:16px;color:var(--gl);letter-spacing:1px}
+.tree-title{font-family:var(--fd);font-size:16px;color:var(--gl);letter-spacing:1px;flex:1}
+.tree-add-btn{background:linear-gradient(135deg,var(--go),#A07010);border:none;border-radius:20px;color:#0E0702;font-family:var(--fd);font-size:11px;font-weight:700;padding:7px 14px;cursor:pointer;letter-spacing:0.5px;white-space:nowrap}
+.tree-pdf-btn{background:rgba(200,60,60,0.15);border:1px solid rgba(200,60,60,0.45);border-radius:20px;color:#FF9090;font-family:var(--fd);font-size:11px;font-weight:700;padding:7px 13px;cursor:pointer;letter-spacing:0.5px;white-space:nowrap;transition:all 0.2s}
+.tree-pdf-btn:hover{background:rgba(200,60,60,0.28)}
+/* SAMPLE BANNER */
+.sample-banner{display:flex;align-items:flex-start;gap:12px;margin:12px 16px 0;padding:14px 16px;background:linear-gradient(135deg,rgba(112,64,184,0.15),rgba(108,63,160,0.08));border:1px solid rgba(192,128,255,0.35);border-radius:12px}
+.sample-banner-icon{font-size:28px;flex-shrink:0;line-height:1}
+.sample-banner-title{font-family:var(--fd);font-size:13px;color:var(--al);letter-spacing:0.5px;margin-bottom:4px;font-weight:600}
+.sample-banner-desc{font-size:12px;color:var(--cs);line-height:1.6}
+.sample-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 16px 4px}
+.sample-add-btn{padding:12px 10px;background:linear-gradient(135deg,var(--go),#A07010);border:none;border-radius:10px;color:#0E0702;font-family:var(--fd);font-size:11px;font-weight:700;cursor:pointer;letter-spacing:0.5px;transition:all 0.2s;line-height:1.4;text-align:center}
+.sample-add-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(240,168,24,0.4)}
+.sample-clear-btn{padding:12px 10px;background:rgba(200,60,60,0.12);border:1px solid rgba(200,60,60,0.35);border-radius:10px;color:#FF8080;font-family:var(--fd);font-size:11px;font-weight:600;cursor:pointer;letter-spacing:0.5px;transition:all 0.2s;line-height:1.4;text-align:center}
+.sample-clear-btn:hover{background:rgba(200,60,60,0.22);border-color:rgba(200,60,60,0.6)}
 .tree-legend{display:flex;align-items:center;gap:16px;padding:10px 16px;border-bottom:1px solid var(--br);background:#160A04;flex-wrap:wrap}
 .tree-legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--cs)}
 .tree-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
@@ -305,7 +318,29 @@ footer{text-align:center;padding:28px 20px 36px;border-top:1px solid var(--br);m
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--gd);border-radius:2px}
+/* ── WALKTHROUGH ── */
+.wt-overlay{display:none;position:fixed;inset:0;z-index:500;pointer-events:none}
+.wt-overlay.show{display:block}
+.wt-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);pointer-events:all}
+.wt-card{position:fixed;bottom:0;left:0;right:0;background:#1C0D06;border:1px solid var(--br);border-radius:20px 20px 0 0;padding:20px 20px 36px;pointer-events:all;animation:slideUp 0.35s ease;z-index:501;max-width:600px;margin:0 auto}
+.wt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--go),transparent)}
+.wt-step-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(240,168,24,0.12);border:1px solid var(--br);border-radius:20px;padding:4px 12px;font-family:var(--fd);font-size:10px;letter-spacing:1px;color:var(--go);margin-bottom:12px}
+.wt-title{font-family:var(--fd);font-size:18px;color:var(--gl);letter-spacing:1px;margin-bottom:8px}
+.wt-desc{font-size:14px;color:var(--cs);line-height:1.8;margin-bottom:18px}
+.wt-highlight{display:flex;align-items:center;gap:10px;background:rgba(240,168,24,0.08);border:1px solid var(--br);border-radius:10px;padding:12px 14px;margin-bottom:18px}
+.wt-highlight-icon{font-size:28px;flex-shrink:0}
+.wt-highlight-text{font-size:13px;color:var(--cr);line-height:1.6}
+.wt-btns{display:flex;gap:10px}
+.wt-next{flex:1;padding:13px;background:linear-gradient(135deg,var(--go),#A07010);border:none;border-radius:12px;color:#0E0702;font-family:var(--fd);font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px}
+.wt-skip{padding:13px 18px;background:none;border:1px solid rgba(240,168,24,0.3);border-radius:12px;color:var(--cd);font-family:var(--fb);font-size:13px;cursor:pointer}
+.wt-dots{display:flex;justify-content:center;gap:6px;margin-bottom:16px}
+.wt-dot{width:6px;height:6px;border-radius:50%;background:var(--br)}
+.wt-dot.act{background:var(--go);width:18px;border-radius:3px}
+/* Demo mode banner */
+.demo-bar{position:fixed;top:60px;left:0;right:0;z-index:150;background:rgba(112,64,184,0.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:8px 16px;display:none;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(192,128,255,0.4)}
+.demo-bar.show{display:flex}
+.demo-bar-label{font-family:var(--fd);font-size:11px;letter-spacing:1px;color:white;display:flex;align-items:center;gap:8px}
+.demo-bar-exit{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;color:white;font-family:var(--fd);font-size:10px;padding:5px 12px;cursor:pointer;letter-spacing:0.5px}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bp);border:1px solid var(--bb);color:var(--cr);padding:11px 20px;border-radius:30px;font-size:13px;z-index:999;transition:transform 0.3s;white-space:nowrap;max-width:90vw;box-shadow:0 8px 40px rgba(0,0,0,0.7)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.success{border-color:rgba(64,238,228,0.5);color:var(--tll)}
@@ -341,7 +376,7 @@ footer{text-align:center;padding:28px 20px 36px;border-top:1px solid var(--br);m
     <div class="ob-actions">
       <button class="ob-cta" onclick="openAddAncMo()">🕯️ Add Your First Member</button>
       <div class="ob-divider"><span>or explore first</span></div>
-      <button class="ob-sample" onclick="loadSample()">👁 Load a Sample Family</button>
+      <button class="ob-sample" onclick="startWalkthrough()">✦ Preview All Features — Quick Tour</button>
     </div>
   </div>
 
@@ -376,11 +411,31 @@ footer{text-align:center;padding:28px 20px 36px;border-top:1px solid var(--br);m
   <div class="tree-topbar">
     <button class="tree-back" onclick="closeTree()">←</button>
     <div class="tree-title">🌳 Family Tree</div>
+    <button class="tree-pdf-btn" onclick="exportTreePDF()">📄 Print</button>
+    <button class="tree-add-btn" onclick="closeTree();setTimeout(openAddAncMo,200)">+ Add</button>
   </div>
   <div class="tree-legend">
     <div class="tree-legend-item"><div class="tree-legend-dot l"></div>Living</div>
     <div class="tree-legend-item"><div class="tree-legend-dot e"></div>Departed</div>
     <div class="tree-legend-item" style="margin-left:auto;font-size:11px;color:var(--cd)">Tap node to open</div>
+  </div>
+  <!-- Sample data banner - shown only when sample is loaded -->
+  <div id="sampleBanner" style="display:none">
+    <div class="sample-banner">
+      <div class="sample-banner-icon">👋</div>
+      <div class="sample-banner-body">
+        <div class="sample-banner-title">This is a sample family</div>
+        <div class="sample-banner-desc">Add your own ancestors to build your real family tree, then clear this sample.</div>
+      </div>
+    </div>
+    <div class="sample-actions">
+      <button class="sample-add-btn" onclick="closeTree();setTimeout(openAddAncMo,200)">
+        + Add Your First Member
+      </button>
+      <button class="sample-clear-btn" onclick="clearSample()">
+        🗑 Clear Sample Data
+      </button>
+    </div>
   </div>
   <div class="tree-wrap" id="treeWrap">
     <div class="tree-svg-container" id="treeSvgContainer"></div>
@@ -591,7 +646,29 @@ footer{text-align:center;padding:28px 20px 36px;border-top:1px solid var(--br);m
   <div style="margin-top:12px;font-size:11px;color:var(--cd);letter-spacing:1px;font-family:var(--fd)">Krishnamurthy Kandregula Innovation Lab</div>
 </footer>
 
-<div class="lb" id="lb"><button class="lbc" onclick="closeLB()">✕</button><img id="lbI" src="" alt=""></div>
+<!-- WALKTHROUGH OVERLAY -->
+<div class="wt-overlay" id="wtOverlay">
+  <div class="wt-backdrop" onclick="wtSkip()"></div>
+  <div class="wt-card">
+    <div class="wt-dots" id="wtDots"></div>
+    <div class="wt-step-pill" id="wtPill">STEP 1 OF 6</div>
+    <div class="wt-title" id="wtTitle"></div>
+    <div class="wt-desc" id="wtDesc"></div>
+    <div class="wt-highlight" id="wtHighlight">
+      <div class="wt-highlight-icon" id="wtIcon"></div>
+      <div class="wt-highlight-text" id="wtHText"></div>
+    </div>
+    <div class="wt-btns">
+      <button class="wt-skip" onclick="wtSkip()">Exit Tour</button>
+      <button class="wt-next" id="wtNextBtn" onclick="wtNext()">Next →</button>
+    </div>
+  </div>
+</div>
+<!-- DEMO MODE BAR -->
+<div class="demo-bar" id="demoBar">
+  <div class="demo-bar-label">✦ DEMO MODE — Sample family loaded</div>
+  <button class="demo-bar-exit" onclick="exitDemo()">✕ Exit Demo</button>
+</div><button class="lbc" onclick="closeLB()">✕</button><img id="lbI" src="" alt=""></div>
 <div class="toast" id="toast"></div>
 <canvas id="cvs"></canvas><canvas id="cvs2"></canvas>
 
@@ -603,8 +680,8 @@ const CVS=document.getElementById('cvs'),CVS2=document.getElementById('cvs2');
 const CX=CVS.getContext('2d'),CX2=CVS2.getContext('2d');
 
 function init(){loadS();regSW();renderHome();updApiBtn();initSlider();}
-function loadS(){try{const s=localStorage.getItem('am9');if(s){const d=JSON.parse(s);if(d&&Array.isArray(d.ancestors))Object.assign(S,d);}}catch(e){}S.chatH=S.chatH||{};S.apiKey=localStorage.getItem('amk')||'';}
-function saveS(){localStorage.setItem('am9',JSON.stringify({ancestors:S.ancestors,chatH:S.chatH}));}
+function loadS(){try{const s=localStorage.getItem('am9');if(s){const d=JSON.parse(s);if(d&&Array.isArray(d.ancestors)){Object.assign(S,d);S.isSample=d.isSample||false;}}}catch(e){}S.chatH=S.chatH||{};S.apiKey=localStorage.getItem('amk')||'';}
+function saveS(){localStorage.setItem('am9',JSON.stringify({ancestors:S.ancestors,chatH:S.chatH,isSample:S.isSample||false}));}
 function hasAI(){return S.apiKey.length>10;}
 function updApiBtn(){const b=document.getElementById('apiBtn');if(!b)return;if(hasAI()){b.textContent='✦ AI Connected';b.className='apib conn';}else{b.textContent='✦ AI Setup';b.className='apib';}}
 function saveApiKey(){const inp=document.getElementById('apiKeyInp');const k=(inp?inp.value:'').trim();if(k.length<20){showToast('Please enter a valid API key','error');return;}localStorage.setItem('amk',k);S.apiKey=k;updApiBtn();closeMo('apiMo');showToast('✦ AI Connected!','ai');if(S.curId&&S.curTab==='o')renderTab('o');}
@@ -671,7 +748,7 @@ function switchTab(t){S.curTab=t;document.querySelectorAll('.tbtn').forEach((b,i
 function fabClick(){openWisMo();}
 
 // ── TREE ──
-function openTree(){document.getElementById('homeScr').classList.remove('act');document.getElementById('treeScr').classList.add('act');document.getElementById('fab').classList.remove('vis');document.getElementById('appFooter').style.display='none';renderTree();}
+function openTree(){document.getElementById('homeScr').classList.remove('act');document.getElementById('treeScr').classList.add('act');document.getElementById('fab').classList.remove('vis');document.getElementById('appFooter').style.display='none';document.getElementById('sampleBanner').style.display=S.isSample?'block':'none';renderTree();}
 function closeTree(){document.getElementById('treeScr').classList.remove('act');document.getElementById('homeScr').classList.add('act');document.getElementById('appFooter').style.display='block';renderHome();}
 function renderTree(){
   const c=document.getElementById('treeSvgContainer');
@@ -690,12 +767,241 @@ function renderTree(){
   c.innerHTML=`<svg style="position:absolute;top:0;left:0;width:${TW}px;height:${TH}px;pointer-events:none;overflow:visible">${genLbls}${lines}</svg>${nodes}`;
 }
 
-// ── RENDER HOME ──
+// ── TREE PDF EXPORT ──────────────────────────────────────
+async function exportTreePDF(){
+  if(!S.ancestors.length){showToast('No family members to print','error');return;}
+  if(!window.jspdf?.jsPDF){showToast('PDF library loading, please retry','error');return;}
+
+  showPdfPg('Generating Family Tree PDF…','Building layout…',10);
+  await sl(100);
+
+  const {jsPDF}=window.jspdf;
+
+  // ── LAYOUT CONSTANTS (mm) ──
+  const NW=44,NH=38,HG=10,VG=22,PX=18,PY=28;
+  const AVATAR_R=10; // avatar circle radius mm
+
+  // Group by generation
+  const gens={};
+  S.ancestors.forEach(a=>{const g=a.generation||4;if(!gens[g])gens[g]=[];gens[g].push(a);});
+  const gk=Object.keys(gens).map(Number).sort((a,b)=>a-b);
+  const mx=Math.max(...gk.map(g=>gens[g].length));
+
+  // Total canvas size
+  const TW=Math.max(mx*(NW+HG)-HG+PX*2, 160);
+  const TH=gk.length*(NH+VG)-VG+PY+40;
+
+  // Choose orientation
+  const landscape=TW>TH;
+  const doc=new jsPDF({orientation:landscape?'landscape':'portrait',unit:'mm',format:'a4'});
+  const PW=landscape?297:210, PH=landscape?210:297;
+
+  // Scale to fit page with margins
+  const MAR=12;
+  const scaleX=(PW-MAR*2)/TW;
+  const scaleY=(PH-MAR*2-30)/TH; // 30mm for header
+  const scale=Math.min(scaleX,scaleY,1);
+
+  // Scaled helpers
+  const sx=x=>MAR+(x*scale);
+  const sy=y=>30+(y*scale); // 30mm header offset
+  const ss=v=>v*scale;
+
+  // ── NODE POSITIONS ──
+  const pos={};
+  gk.forEach((g,gi)=>{
+    const row=gens[g],rw=row.length*(NW+HG)-HG,startX=(TW-rw)/2;
+    row.forEach((a,idx)=>{
+      const x=startX+idx*(NW+HG),y=gi*(NH+VG);
+      pos[a.id]={x,y,cx:x+NW/2,cy:y+NH/2};
+    });
+  });
+
+  // ── HEADER ──
+  doc.setFillColor(14,7,2);
+  doc.rect(0,0,PW,26,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(255,208,64);
+  doc.text('AncestralMind — Family Tree',PW/2,12,{align:'center'});
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(160,130,80);
+  const fam=S.ancestors[0]?.name?.split(' ').slice(-1)[0]||'Family';
+  doc.text('The '+fam+' Family  •  '+S.ancestors.length+' members  •  '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}),PW/2,19,{align:'center'});
+  // Gold divider
+  doc.setDrawColor(201,149,42);doc.setLineWidth(0.4);doc.line(MAR,25,PW-MAR,25);
+
+  setPf(25);await sl(50);
+
+  // ── CONNECTOR LINES ──
+  S.ancestors.forEach(a=>{
+    if(!a.parentId||!pos[a.id]||!pos[a.parentId])return;
+    const ch=pos[a.id],pa=pos[a.parentId];
+    const lv=a.status==='living';
+    // Bezier as 3-segment approximation
+    const x1=sx(pa.cx),y1=sy(pa.y+NH),x2=sx(ch.cx),y2=sy(ch.y);
+    const cp1y=y1+ss(VG*0.4),cp2y=y2-ss(VG*0.4);
+    if(lv){doc.setDrawColor(74,224,128);doc.setLineWidth(0.5);}
+    else{doc.setDrawColor(201,149,42,0.6);doc.setLineWidth(0.4);}
+    // Draw as polyline approximation of bezier
+    const steps=8;
+    const pts=[];
+    for(let t=0;t<=steps;t++){
+      const u=t/steps;
+      const bx=Math.pow(1-u,3)*x1+3*Math.pow(1-u,2)*u*x1+3*(1-u)*u*u*x2+Math.pow(u,3)*x2;
+      const by=Math.pow(1-u,3)*y1+3*Math.pow(1-u,2)*u*cp1y+3*(1-u)*u*u*cp2y+Math.pow(u,3)*y2;
+      pts.push([bx,by]);
+    }
+    for(let i=0;i<pts.length-1;i++) doc.line(pts[i][0],pts[i][1],pts[i+1][0],pts[i+1][1]);
+  });
+
+  setPf(45);await sl(50);
+
+  // ── GENERATION LABELS ──
+  gk.forEach((g,gi)=>{
+    const lbl={1:'Gen 1',2:'Gen 2',3:'Gen 3',4:'Gen 4',5:'Gen 5',6:'Gen 6'}[g]||('Gen '+g);
+    const midY=sy(gi*(NH+VG)+NH/2);
+    doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(160,130,60);
+    doc.text(lbl,MAR-2,midY,{angle:90,align:'center'});
+  });
+
+  setPf(55);await sl(50);
+
+  // ── DRAW NODES ──
+  const total=S.ancestors.filter(a=>pos[a.id]).length;
+  let drawn=0;
+
+  for(const a of S.ancestors){
+    if(!pos[a.id])continue;
+    const p=pos[a.id],lv=a.status==='living';
+    const nx=sx(p.x),ny=sy(p.y),nw=ss(NW),nh=ss(NH);
+    const cx2=sx(p.cx),cy2=sy(p.y+NH/2);
+
+    // Node box background
+    doc.setFillColor(30,15,6);
+    doc.setDrawColor(lv?74:201, lv?224:149, lv?128:42);
+    doc.setLineWidth(lv?0.5:0.3);
+    doc.roundedRect(nx,ny,nw,nh,ss(3),ss(3),'FD');
+
+    // Avatar circle
+    const avR=ss(AVATAR_R);
+    const avCx=cx2,avCy=ny+avR+ss(3);
+
+    if(a.photo){
+      // Draw photo in circle using clipping
+      try{
+        // Load photo to temp canvas for PDF
+        await new Promise(res=>{
+          const img=new Image();
+          img.onload=()=>{
+            const tc=document.createElement('canvas');
+            tc.width=80;tc.height=80;
+            const tx=tc.getContext('2d');
+            tx.beginPath();tx.arc(40,40,40,0,Math.PI*2);tx.clip();
+            tx.drawImage(img,0,0,80,80);
+            const b64=tc.toDataURL('image/jpeg',0.85).split(',')[1];
+            doc.addImage('data:image/jpeg;base64,'+b64,'JPEG',avCx-avR,avCy-avR,avR*2,avR*2);
+            // Circle border
+            doc.setDrawColor(lv?74:201,lv?224:149,lv?128:42);
+            doc.setLineWidth(lv?0.5:0.3);
+            doc.setFillColor(0,0,0,0);
+            doc.circle(avCx,avCy,avR,'S');
+            res();
+          };
+          img.onerror=()=>{drawInitialsAvatar();res();};
+          img.src=a.photo;
+        });
+      }catch(e){drawInitialsAvatar();}
+    }else{
+      drawInitialsAvatar();
+    }
+
+    function drawInitialsAvatar(){
+      // Filled circle
+      if(lv){doc.setFillColor(20,60,30);doc.setDrawColor(74,224,128);}
+      else{doc.setFillColor(40,25,8);doc.setDrawColor(201,149,42);}
+      doc.setLineWidth(lv?0.5:0.35);
+      doc.circle(avCx,avCy,avR,'FD');
+      // Initials
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(ss(9));
+      doc.setTextColor(lv?74:201,lv?224:149,lv?128:42);
+      doc.text(ini(a.name),avCx,avCy+ss(3),{align:'center'});
+    }
+
+    // Living status dot
+    if(lv){
+      doc.setFillColor(74,224,128);
+      doc.circle(nx+nw-ss(4),ny+ss(4),ss(1.5),'F');
+    }
+
+    // Name (shortened to fit)
+    const nm=a.name.split(' ').slice(0,2).join(' ');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(Math.max(ss(5),4.5));
+    doc.setTextColor(250,240,220);
+    const nmLines=doc.splitTextToSize(nm,nw-ss(4));
+    let textY=avCy+avR+ss(3.5);
+    nmLines.slice(0,2).forEach(line=>{
+      doc.text(line,cx2,textY,{align:'center'});
+      textY+=ss(5.5);
+    });
+
+    // Relation
+    const rl=a.relation.replace(/ \(.*?\)/,'');
+    doc.setFont('helvetica','normal');doc.setFontSize(Math.max(ss(3.8),3.5));
+    doc.setTextColor(lv?74:201,lv?224:149,lv?128:42);
+    doc.text(rl.substring(0,16).toUpperCase(),cx2,textY,{align:'center'});
+    textY+=ss(4.5);
+
+    // Years
+    const yr=fmtY(a.birthYear,a.deathYear);
+    if(yr){
+      doc.setFont('helvetica','italic');doc.setFontSize(Math.max(ss(3.5),3));
+      doc.setTextColor(160,130,80);
+      doc.text(yr,cx2,textY,{align:'center'});
+    }
+
+    drawn++;
+    setPf(55+Math.round((drawn/total)*35));
+    await sl(20);
+  }
+
+  setPf(94);await sl(50);
+
+  // ── FOOTER ──
+  const pages=doc.getNumberOfPages();
+  for(let p=1;p<=pages;p++){
+    doc.setPage(p);
+    doc.setDrawColor(80,60,20);doc.setLineWidth(0.3);doc.line(MAR,PH-10,PW-MAR,PH-10);
+    doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(120,90,40);
+    doc.text('AncestralMind  •  Designed by Kandregula Krishnamurthy',MAR,PH-6);
+    doc.text('Page '+p+' of '+pages,PW-MAR,PH-6,{align:'right'});
+  }
+
+  setPf(100);await sl(300);
+  const fname=S.ancestors[0]?.name?.split(' ').slice(-1)[0]||'Family';
+  const treeBlob=doc.output('blob');
+  const treeUrl=URL.createObjectURL(treeBlob);
+  hidePdfPg();
+  window.open(treeUrl,'_blank');
+  showToast('📄 PDF opened — use Share to print or save','success');
+}
+// ── END TREE PDF ──────────────────────────────────────────
 function renderHome(){
   const ob=document.getElementById('obView'),gv=document.getElementById('gridView');
   document.getElementById('appFooter').style.display='block';
   if(!S.ancestors.length){ob.style.display='block';gv.style.display='none';return;}
   ob.style.display='none';gv.style.display='block';
+  // Show sample hint on home grid if sample data is loaded
+  const existingHint=document.getElementById('homeSmplHint');
+  if(S.isSample&&!existingHint){
+    const hint=document.createElement('div');
+    hint.id='homeSmplHint';
+    hint.style.cssText='margin:0 16px 12px;padding:12px 14px;background:rgba(112,64,184,0.12);border:1px solid rgba(192,128,255,0.3);border-radius:10px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--cs)';
+    hint.innerHTML='<span style="font-size:20px">👋</span><div><strong style="color:var(--al);font-family:var(--fd);font-size:11px;letter-spacing:1px;display:block;margin-bottom:3px">SAMPLE DATA LOADED</strong>Add your real family members, then view tree and clear the sample.</div>';
+    const grid=document.getElementById('ancGrid');
+    grid.parentNode.insertBefore(hint,grid);
+  }else if(!S.isSample&&existingHint){
+    existingHint.remove();
+  }
   const g=document.getElementById('ancGrid');let h='';
   S.ancestors.forEach((a,i)=>{
     const wc=(a.wisdomEntries||[]).length,lv=a.status==='living';
@@ -932,8 +1238,11 @@ async function exportPDF(aId){
     en.forEach((w,i)=>{chk(20);sf('bold',9,[240,168,24]);doc.text(`${String(i+1).padStart(2,'0')}  ${tIcon(w.type)} ${w.type.toUpperCase()}`,ML,y);sf('italic',8,[160,130,80]);doc.text(new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}),PW-ML,y,{align:'right'});y+=5;ln(ML,y,PW-ML,y,[60,40,15],0.2);y+=5;if(w.text){sf('normal',10,[250,240,220]);wr(w.text,ML,UW,5.5);}y+=5;if(i<en.length-1){ln(ML,y,PW-ML,y,[40,25,8],0.15);y+=3;}});}
   const tp=doc.getNumberOfPages();for(let p=1;p<=tp;p++){doc.setPage(p);ln(ML,287,PW-ML,287,[80,60,20],0.3);sf('normal',7,[120,90,40]);doc.text(`AncestralMind — Designed by Kandregula Krishnamurthy`,ML,292);doc.text(`Page ${p} of ${tp}`,PW-ML,292,{align:'right'});}
   showPdfPg('Done!','Downloading…',100);await sl(400);
-  doc.save(`${a.name.replace(/\s+/g,'_')}_AncestralMind.pdf`);
-  hidePdfPg();showToast(`📄 PDF saved`,'success');
+  const pdfBlob=doc.output('blob');
+  const pdfUrl=URL.createObjectURL(pdfBlob);
+  hidePdfPg();
+  window.open(pdfUrl,'_blank');
+  showToast('📄 PDF opened — use Share to print or save','success');
 }
 function showPdfPg(t,s,p){document.getElementById('pdfOvT').textContent=t;document.getElementById('pdfOvS').textContent=s;document.getElementById('pdfBarF').style.width=p+'%';document.getElementById('pdfOv').classList.add('show');}
 function hidePdfPg(){document.getElementById('pdfOv').classList.remove('show');}
@@ -943,12 +1252,24 @@ function loadSample(){
   if(S.ancestors.length){showToast('Clear existing data first','error');return;}
   const pid=gid(),mid=gid(),fid=gid();
   S.ancestors=[
-    {id:pid,name:'Venkata Rao Kandregula',relation:'Great-Grandfather',language:'Telugu',birthYear:'1895',deathYear:'1968',status:'expired',generation:1,parentId:null,description:'A principled patriarch. Rose before sunrise every day. Spoke only in Telugu proverbs.',photo:null,wisdomEntries:[{id:gid(),type:'Saying',text:'నీరు తక్కువగా ఉన్నప్పుడు — When water is scarce, the field trusts the rain will come. Worry is the drought you bring upon yourself.',timestamp:Date.now()-86400000*40}]},
-    {id:mid,name:'Subbamma Kandregula',relation:'Great-Grandmother',language:'Telugu',birthYear:'1900',deathYear:'1975',status:'expired',generation:1,parentId:null,description:'The matriarch. Known for her cooking and herbal wisdom.',photo:null,wisdomEntries:[{id:gid(),type:'Belief',text:'The kitchen is the soul of the house. Cook only when your heart is calm — food carries the mood of the one who made it.',timestamp:Date.now()-86400000*35}]},
-    {id:fid,name:'Krishnamurthy Rao',relation:'Grandfather (Thatha)',language:'Telugu',birthYear:'1928',deathYear:'1992',status:'expired',generation:2,parentId:pid,description:'Farmer and teacher. Loved Carnatic music and jasmine flowers.',photo:null,wisdomEntries:[{id:gid(),type:'Story',text:'During the drought of 1953, when other farmers abandoned their fields, Thatha stayed. He mortgaged his gold ring to buy seeds. "The land fed my father. I will not leave it when it is hungry."',timestamp:Date.now()-86400000*20},{id:gid(),type:'Life Lesson',text:'Never borrow money to celebrate. Celebrate when the harvest comes in, not when it is still in the ground.',timestamp:Date.now()-86400000*15}]},
+    {id:pid,name:'Venkata Rao Kandregula',relation:'Great-Grandfather',language:'Telugu',birthYear:'1895',deathYear:'1968',status:'expired',generation:1,parentId:null,description:'A principled patriarch. Rose before sunrise every day. Spoke only in Telugu proverbs.',photo:null,wisdomEntries:[{id:gid(),type:'Saying',text:'When water is scarce, the field trusts the rain will come. Worry is the drought you bring upon yourself.',timestamp:Date.now()-86400000*40}]},
+    {id:mid,name:'Subbamma Kandregula',relation:'Great-Grandmother',language:'Telugu',birthYear:'1900',deathYear:'1975',status:'expired',generation:1,parentId:null,description:'The matriarch. Known for her cooking and herbal wisdom.',photo:null,wisdomEntries:[{id:gid(),type:'Belief',text:'The kitchen is the soul of the house. Cook only when your heart is calm.',timestamp:Date.now()-86400000*35}]},
+    {id:fid,name:'Krishnamurthy Rao',relation:'Grandfather (Thatha)',language:'Telugu',birthYear:'1928',deathYear:'1992',status:'expired',generation:2,parentId:pid,description:'Farmer and teacher. Loved Carnatic music and jasmine flowers.',photo:null,wisdomEntries:[{id:gid(),type:'Story',text:'During the drought of 1953, when other farmers abandoned their fields, Thatha stayed. He mortgaged his gold ring to buy seeds. The land fed my father. I will not leave it when it is hungry.',timestamp:Date.now()-86400000*20},{id:gid(),type:'Life Lesson',text:'Never borrow money to celebrate. Celebrate when the harvest comes in, not when it is still in the ground.',timestamp:Date.now()-86400000*15}]},
     {id:gid(),name:'Your Father',relation:'Father (Nanna)',language:'Telugu',birthYear:'1958',deathYear:null,status:'living',generation:3,parentId:fid,description:'Add your own story here.',photo:null,wisdomEntries:[]},
   ];
-  saveS();renderHome();showToast('Sample family loaded ✦','success');setTimeout(openTree,400);
+  S.isSample=true;
+  saveS();renderHome();showToast('Sample family loaded ✦','success');
+  setTimeout(()=>{openTree();},400);
+}
+
+function clearSample(){
+  if(!confirm('Clear all sample data and start fresh with your own family?'))return;
+  S.ancestors=[];S.chatH={};S.isSample=false;
+  saveS();
+  document.getElementById('sampleBanner').style.display='none';
+  const hint=document.getElementById('homeSmplHint');if(hint)hint.remove();
+  closeTree();
+  showToast('Sample cleared — ready for your family!','success');
 }
 
 // ── ANCESTOR CRUD ──
@@ -979,6 +1300,127 @@ document.getElementById('lb').addEventListener('click',closeLB);
 // ── TOAST ──
 let tT;
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),2800);}
+
+// ── WALKTHROUGH / FEATURE TOUR ──────────────────────────
+const WT_STEPS=[
+  {
+    title:'Welcome to AncestralMind',
+    desc:'This quick tour shows every feature using a sample family. Nothing is saved — your data stays empty until you add your own ancestors.',
+    icon:'🕯️',
+    htext:'5 features to explore: Wisdom Vault, Oracle Chat, Photo Enhancement, Family Tree, and PDF Export.',
+    action:null,
+    next:'Next →'
+  },
+  {
+    title:'Family Tree View',
+    desc:'Your family is visualised across generations. Green border = Living. Gold border = Departed. Tap any node to open their profile.',
+    icon:'🌳',
+    htext:'Connector lines show parent-child links. Print the full tree as a PDF using the 📄 Print button.',
+    action:()=>openTree(),
+    next:'Open Tree →'
+  },
+  {
+    title:'Ancestor Profile & Wisdom Vault',
+    desc:'Each ancestor has a profile with Wisdom, Oracle, and Gallery tabs. The Wisdom tab holds all their stories, sayings, and lessons.',
+    icon:'📜',
+    htext:'Add stories, life lessons, sayings, beliefs, memories — with text and photos. Share each entry via WhatsApp or copy to clipboard.',
+    action:()=>{closeTree();const a=S.ancestors[2];if(a){openAnc(a.id);switchTab('w');}},
+    next:'Open Wisdom →'
+  },
+  {
+    title:'Oracle Chat — Talk to Your Ancestor',
+    desc:'The Oracle tab lets you have real conversations with your ancestor, powered by Claude AI. Their responses draw from the wisdom you recorded.',
+    icon:'🔮',
+    htext:'Requires an Anthropic API key (free to start). The AI speaks in their voice, personality, and cultural tone.',
+    action:()=>switchTab('o'),
+    next:'See Oracle →'
+  },
+  {
+    title:'Photo Enhancement Studio',
+    desc:'Every photo you upload is automatically analysed. Blurry photos are enhanced instantly. B&W photos can be AI-colorized with historically accurate colors.',
+    icon:'📸',
+    htext:'Before/After slider to compare. Save the enhanced photo directly to your device. Works fully offline — no AI needed.',
+    action:null,
+    next:'Next →'
+  },
+  {
+    title:'PDF Family Report & Export',
+    desc:'Export a full PDF report of any ancestor\'s wisdom, or print the entire Family Tree as a visual PDF. Opens in your browser\'s Share Sheet — Print, Save to Files, or AirDrop.',
+    icon:'📄',
+    htext:'Tap Share → Print on iOS for a physical printout. Or Save to Files to keep a permanent copy.',
+    action:null,
+    next:'Start My Family →'
+  }
+];
+
+let wtStep=0;
+let wtDemoLoaded=false;
+
+function startWalkthrough(){
+  // Load sample data silently for demo
+  if(!S.ancestors.length){
+    const pid=gid(),fid=gid();
+    S.ancestors=[
+      {id:pid,name:'Venkata Rao Kandregula',relation:'Great-Grandfather',language:'Telugu',birthYear:'1895',deathYear:'1968',status:'expired',generation:1,parentId:null,description:'A principled patriarch.',photo:null,wisdomEntries:[{id:gid(),type:'Saying',text:'When water is scarce, the field trusts the rain will come.',timestamp:Date.now()-86400000*40},{id:gid(),type:'Life Lesson',text:'Never borrow money to celebrate. Celebrate when the harvest comes in.',timestamp:Date.now()-86400000*20}]},
+      {id:gid(),name:'Subbamma Kandregula',relation:'Great-Grandmother',language:'Telugu',birthYear:'1900',deathYear:'1975',status:'expired',generation:1,parentId:null,description:'The matriarch.',photo:null,wisdomEntries:[{id:gid(),type:'Belief',text:'The kitchen is the soul of the house.',timestamp:Date.now()-86400000*30}]},
+      {id:fid,name:'Krishnamurthy Rao',relation:'Grandfather (Thatha)',language:'Telugu',birthYear:'1928',deathYear:'1992',status:'expired',generation:2,parentId:pid,description:'Farmer and teacher. Loved Carnatic music.',photo:null,wisdomEntries:[{id:gid(),type:'Story',text:'During the drought of 1953 he stayed when others left. The land fed my father. I will not leave it when it is hungry.',timestamp:Date.now()-86400000*15}]},
+      {id:gid(),name:'Your Father',relation:'Father (Nanna)',language:'Telugu',birthYear:'1958',deathYear:null,status:'living',generation:3,parentId:fid,description:'Add your own story here.',photo:null,wisdomEntries:[]},
+    ];
+    S.isSample=true;S.chatH={};wtDemoLoaded=true;
+    renderHome();
+  }
+  wtStep=0;
+  document.getElementById('demoBar').classList.add('show');
+  showWtStep(0);
+}
+
+function showWtStep(n){
+  const step=WT_STEPS[n];
+  const total=WT_STEPS.length;
+  // Dots
+  const dotsEl=document.getElementById('wtDots');
+  dotsEl.innerHTML=WT_STEPS.map((_,i)=>'<div class="wt-dot'+(i===n?' act':'')+'"></div>').join('');
+  document.getElementById('wtPill').textContent='STEP '+(n+1)+' OF '+total;
+  document.getElementById('wtTitle').textContent=step.title;
+  document.getElementById('wtDesc').textContent=step.desc;
+  document.getElementById('wtIcon').textContent=step.icon;
+  document.getElementById('wtHText').textContent=step.htext;
+  document.getElementById('wtNextBtn').textContent=step.next;
+  // Run nav action
+  if(step.action)step.action();
+  // Show overlay
+  document.getElementById('wtOverlay').classList.add('show');
+}
+
+function wtNext(){
+  document.getElementById('wtOverlay').classList.remove('show');
+  wtStep++;
+  if(wtStep>=WT_STEPS.length){
+    // Tour complete
+    exitDemo();
+    showToast('Tour complete! Now add your own family. ✦','success');
+    return;
+  }
+  setTimeout(()=>showWtStep(wtStep),300);
+}
+
+function wtSkip(){
+  document.getElementById('wtOverlay').classList.remove('show');
+  exitDemo();
+}
+
+function exitDemo(){
+  document.getElementById('wtOverlay').classList.remove('show');
+  document.getElementById('demoBar').classList.remove('show');
+  if(wtDemoLoaded){
+    S.ancestors=[];S.chatH={};S.isSample=false;wtDemoLoaded=false;
+    saveS();goHome();
+    showToast('Demo exited — ready to add your family','success');
+  }else{
+    goHome();
+  }
+}
+// ── END WALKTHROUGH ──────────────────────────────────────
 
 // ── HELPERS ──
 function ga(){return S.ancestors.find(a=>a.id===S.curId);}
