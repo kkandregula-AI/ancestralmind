@@ -6,8 +6,17 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>AncestralMind</title>
+<style id="printStyles">
+@media print {
+  body { background: white !important; color: #1a0d00 !important; }
+  .tb, .fab, .demo-bar, .wt-overlay, .pdf-ov, footer { display: none !important; }
+  .print-page { page-break-after: always; }
+  .print-tree-node { border: 1px solid #c9952a !important; background: #fff8ee !important; }
+  .print-living { border-color: #2e7d32 !important; }
+  .print-departed { border-color: #c9952a !important; }
+}
+</style>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
   --bd:#0E0702;--bc:#1C0D06;--bp:#261208;--bm:#160A04;
@@ -618,7 +627,7 @@ footer{text-align:center;padding:28px 20px 36px;border-top:1px solid var(--br);m
       <input type="password" class="fi" id="apiKeyInp" placeholder="sk-ant-...">
     </div>
     <button class="bp2" onclick="saveApiKey()" style="background:linear-gradient(135deg,var(--ai),#4A1A80);color:white">✦ Connect AI Features</button>
-    <button class="bs" onclick="closeMo('apiMo')">Continue with Free Features</button>
+    <button class="bs" onclick="closeMo('apiMo');renderHome()">Continue with Free Features</button>
   </div>
 </div>
 
@@ -679,12 +688,19 @@ const S={ancestors:[],curId:null,curTab:'w',ancPh64:null,wisPh64:null,wisPhTp:nu
 const CVS=document.getElementById('cvs'),CVS2=document.getElementById('cvs2');
 const CX=CVS.getContext('2d'),CX2=CVS2.getContext('2d');
 
-function init(){loadS();regSW();renderHome();updApiBtn();initSlider();}
+function init(){
+  loadS();regSW();
+  // Ensure homeScr is active on load
+  document.getElementById('homeScr').classList.add('act');
+  document.getElementById('detScr').classList.remove('act');
+  document.getElementById('treeScr').classList.remove('act');
+  renderHome();updApiBtn();initSlider();
+}
 function loadS(){try{const s=localStorage.getItem('am9');if(s){const d=JSON.parse(s);if(d&&Array.isArray(d.ancestors)){Object.assign(S,d);S.isSample=d.isSample||false;}}}catch(e){}S.chatH=S.chatH||{};S.apiKey=localStorage.getItem('amk')||'';}
 function saveS(){localStorage.setItem('am9',JSON.stringify({ancestors:S.ancestors,chatH:S.chatH,isSample:S.isSample||false}));}
 function hasAI(){return S.apiKey.length>10;}
 function updApiBtn(){const b=document.getElementById('apiBtn');if(!b)return;if(hasAI()){b.textContent='✦ AI Connected';b.className='apib conn';}else{b.textContent='✦ AI Setup';b.className='apib';}}
-function saveApiKey(){const inp=document.getElementById('apiKeyInp');const k=(inp?inp.value:'').trim();if(k.length<20){showToast('Please enter a valid API key','error');return;}localStorage.setItem('amk',k);S.apiKey=k;updApiBtn();closeMo('apiMo');showToast('✦ AI Connected!','ai');if(S.curId&&S.curTab==='o')renderTab('o');}
+function saveApiKey(){const inp=document.getElementById('apiKeyInp');const k=(inp?inp.value:'').trim();if(k.length<20){showToast('Please enter a valid API key','error');return;}localStorage.setItem('amk',k);S.apiKey=k;updApiBtn();closeMo('apiMo');renderHome();showToast('✦ AI Connected! You can now talk to your ancestors.','ai');if(S.curId&&S.curTab==='o')renderTab('o');}
 function regSW(){if(!('serviceWorker'in navigator))return;navigator.serviceWorker.register(URL.createObjectURL(new Blob([`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('fetch',()=>{});`],{type:'application/javascript'})));}
 
 // ── CANVAS PHOTO ENGINE ──
@@ -770,219 +786,78 @@ function renderTree(){
 // ── TREE PDF EXPORT ──────────────────────────────────────
 async function exportTreePDF(){
   if(!S.ancestors.length){showToast('No family members to print','error');return;}
-  if(!window.jspdf?.jsPDF){showToast('PDF library loading, please retry','error');return;}
-
-  showPdfPg('Generating Family Tree PDF…','Building layout…',10);
+  showToast('Building tree for print…','success');
   await sl(100);
-
-  const {jsPDF}=window.jspdf;
-
-  // ── LAYOUT CONSTANTS (mm) ──
-  const NW=44,NH=38,HG=10,VG=22,PX=18,PY=28;
-  const AVATAR_R=10; // avatar circle radius mm
 
   // Group by generation
   const gens={};
   S.ancestors.forEach(a=>{const g=a.generation||4;if(!gens[g])gens[g]=[];gens[g].push(a);});
   const gk=Object.keys(gens).map(Number).sort((a,b)=>a-b);
+  const NW=120,NH=108,HG=18,VG=60,PX=40,PY=30;
   const mx=Math.max(...gk.map(g=>gens[g].length));
+  const TW=Math.max(mx*(NW+HG)-HG+PX*2,400);
+  const TH=gk.length*(NH+VG)-VG+PY+60;
 
-  // Total canvas size
-  const TW=Math.max(mx*(NW+HG)-HG+PX*2, 160);
-  const TH=gk.length*(NH+VG)-VG+PY+40;
-
-  // Choose orientation
-  const landscape=TW>TH;
-  const doc=new jsPDF({orientation:landscape?'landscape':'portrait',unit:'mm',format:'a4'});
-  const PW=landscape?297:210, PH=landscape?210:297;
-
-  // Scale to fit page with margins
-  const MAR=12;
-  const scaleX=(PW-MAR*2)/TW;
-  const scaleY=(PH-MAR*2-30)/TH; // 30mm for header
-  const scale=Math.min(scaleX,scaleY,1);
-
-  // Scaled helpers
-  const sx=x=>MAR+(x*scale);
-  const sy=y=>30+(y*scale); // 30mm header offset
-  const ss=v=>v*scale;
-
-  // ── NODE POSITIONS ──
+  // Positions
   const pos={};
   gk.forEach((g,gi)=>{
-    const row=gens[g],rw=row.length*(NW+HG)-HG,startX=(TW-rw)/2;
-    row.forEach((a,idx)=>{
-      const x=startX+idx*(NW+HG),y=gi*(NH+VG);
-      pos[a.id]={x,y,cx:x+NW/2,cy:y+NH/2};
-    });
+    const row=gens[g],rw=row.length*(NW+HG)-HG,sx=(TW-rw)/2,y=PY+gi*(NH+VG);
+    row.forEach((a,idx)=>{const x=sx+idx*(NW+HG);pos[a.id]={x,y,cx:x+NW/2};});
   });
 
-  // ── HEADER ──
-  doc.setFillColor(14,7,2);
-  doc.rect(0,0,PW,26,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(255,208,64);
-  doc.text('AncestralMind — Family Tree',PW/2,12,{align:'center'});
-  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(160,130,80);
-  const fam=S.ancestors[0]?.name?.split(' ').slice(-1)[0]||'Family';
-  doc.text('The '+fam+' Family  •  '+S.ancestors.length+' members  •  '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}),PW/2,19,{align:'center'});
-  // Gold divider
-  doc.setDrawColor(201,149,42);doc.setLineWidth(0.4);doc.line(MAR,25,PW-MAR,25);
+  // Build SVG lines
+  const svgLines=S.ancestors.filter(a=>a.parentId&&pos[a.id]&&pos[a.parentId]).map(a=>{
+    const ch=pos[a.id],pa=pos[a.parentId],lv=a.status==='living';
+    const x1=pa.cx,y1=pa.y+NH,x2=ch.cx,y2=ch.y;
+    const c1y=y1+(y2-y1)*0.4,c2y=y2-(y2-y1)*0.4;
+    return '<path d="M'+x1+','+y1+' C'+x1+','+c1y+' '+x2+','+c2y+' '+x2+','+y2+'" stroke="'+(lv?'#2e7d32':'#c9952a')+'" stroke-width="2" fill="none"'+(lv?'':' stroke-dasharray="6,3"')+'/>';
+  }).join('');
 
-  setPf(25);await sl(50);
+  // Build SVG gen labels
+  const svgGenLbls=gk.map((g,gi)=>{
+    const lbl={1:'Gen 1',2:'Gen 2',3:'Gen 3',4:'Gen 4',5:'Gen 5',6:'Gen 6'}[g]||'Gen '+g;
+    const midY=PY+gi*(NH+VG)+NH/2;
+    return '<text x="16" y="'+midY+'" transform="rotate(-90 16 '+midY+')" font-size="11" fill="#b08830" font-family="serif" font-weight="bold" text-anchor="middle">'+lbl+'</text>';
+  }).join('');
 
-  // ── CONNECTOR LINES ──
-  S.ancestors.forEach(a=>{
-    if(!a.parentId||!pos[a.id]||!pos[a.parentId])return;
-    const ch=pos[a.id],pa=pos[a.parentId];
-    const lv=a.status==='living';
-    // Bezier as 3-segment approximation
-    const x1=sx(pa.cx),y1=sy(pa.y+NH),x2=sx(ch.cx),y2=sy(ch.y);
-    const cp1y=y1+ss(VG*0.4),cp2y=y2-ss(VG*0.4);
-    if(lv){doc.setDrawColor(74,224,128);doc.setLineWidth(0.5);}
-    else{doc.setDrawColor(201,149,42,0.6);doc.setLineWidth(0.4);}
-    // Draw as polyline approximation of bezier
-    const steps=8;
-    const pts=[];
-    for(let t=0;t<=steps;t++){
-      const u=t/steps;
-      const bx=Math.pow(1-u,3)*x1+3*Math.pow(1-u,2)*u*x1+3*(1-u)*u*u*x2+Math.pow(u,3)*x2;
-      const by=Math.pow(1-u,3)*y1+3*Math.pow(1-u,2)*u*cp1y+3*(1-u)*u*u*cp2y+Math.pow(u,3)*y2;
-      pts.push([bx,by]);
-    }
-    for(let i=0;i<pts.length-1;i++) doc.line(pts[i][0],pts[i][1],pts[i+1][0],pts[i+1][1]);
-  });
-
-  setPf(45);await sl(50);
-
-  // ── GENERATION LABELS ──
-  gk.forEach((g,gi)=>{
-    const lbl={1:'Gen 1',2:'Gen 2',3:'Gen 3',4:'Gen 4',5:'Gen 5',6:'Gen 6'}[g]||('Gen '+g);
-    const midY=sy(gi*(NH+VG)+NH/2);
-    doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(160,130,60);
-    doc.text(lbl,MAR-2,midY,{angle:90,align:'center'});
-  });
-
-  setPf(55);await sl(50);
-
-  // ── DRAW NODES ──
-  const total=S.ancestors.filter(a=>pos[a.id]).length;
-  let drawn=0;
-
-  for(const a of S.ancestors){
-    if(!pos[a.id])continue;
+  // Build node HTML
+  const nodeHtml=S.ancestors.map(a=>{
+    if(!pos[a.id])return '';
     const p=pos[a.id],lv=a.status==='living';
-    const nx=sx(p.x),ny=sy(p.y),nw=ss(NW),nh=ss(NH);
-    const cx2=sx(p.cx),cy2=sy(p.y+NH/2);
-
-    // Node box background
-    doc.setFillColor(30,15,6);
-    doc.setDrawColor(lv?74:201, lv?224:149, lv?128:42);
-    doc.setLineWidth(lv?0.5:0.3);
-    doc.roundedRect(nx,ny,nw,nh,ss(3),ss(3),'FD');
-
-    // Avatar circle
-    const avR=ss(AVATAR_R);
-    const avCx=cx2,avCy=ny+avR+ss(3);
-
-    if(a.photo){
-      // Draw photo in circle using clipping
-      try{
-        // Load photo to temp canvas for PDF
-        await new Promise(res=>{
-          const img=new Image();
-          img.onload=()=>{
-            const tc=document.createElement('canvas');
-            tc.width=80;tc.height=80;
-            const tx=tc.getContext('2d');
-            tx.beginPath();tx.arc(40,40,40,0,Math.PI*2);tx.clip();
-            tx.drawImage(img,0,0,80,80);
-            const b64=tc.toDataURL('image/jpeg',0.85).split(',')[1];
-            doc.addImage('data:image/jpeg;base64,'+b64,'JPEG',avCx-avR,avCy-avR,avR*2,avR*2);
-            // Circle border
-            doc.setDrawColor(lv?74:201,lv?224:149,lv?128:42);
-            doc.setLineWidth(lv?0.5:0.3);
-            doc.setFillColor(0,0,0,0);
-            doc.circle(avCx,avCy,avR,'S');
-            res();
-          };
-          img.onerror=()=>{drawInitialsAvatar();res();};
-          img.src=a.photo;
-        });
-      }catch(e){drawInitialsAvatar();}
-    }else{
-      drawInitialsAvatar();
-    }
-
-    function drawInitialsAvatar(){
-      // Filled circle
-      if(lv){doc.setFillColor(20,60,30);doc.setDrawColor(74,224,128);}
-      else{doc.setFillColor(40,25,8);doc.setDrawColor(201,149,42);}
-      doc.setLineWidth(lv?0.5:0.35);
-      doc.circle(avCx,avCy,avR,'FD');
-      // Initials
-      doc.setFont('helvetica','bold');
-      doc.setFontSize(ss(9));
-      doc.setTextColor(lv?74:201,lv?224:149,lv?128:42);
-      doc.text(ini(a.name),avCx,avCy+ss(3),{align:'center'});
-    }
-
-    // Living status dot
-    if(lv){
-      doc.setFillColor(74,224,128);
-      doc.circle(nx+nw-ss(4),ny+ss(4),ss(1.5),'F');
-    }
-
-    // Name (shortened to fit)
+    const av=a.photo
+      ?'<img src="'+a.photo+'" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid '+(lv?'#4ae080':'#c9952a')+'">'
+      :'<div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:16px;background:'+(lv?'rgba(46,125,50,0.25)':'rgba(201,149,42,0.2)')+';border:2px solid '+(lv?'#4ae080':'#c9952a')+';color:'+(lv?'#4ae080':'#c9952a')+'">'+ini(a.name)+'</div>';
     const nm=a.name.split(' ').slice(0,2).join(' ');
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(Math.max(ss(5),4.5));
-    doc.setTextColor(250,240,220);
-    const nmLines=doc.splitTextToSize(nm,nw-ss(4));
-    let textY=avCy+avR+ss(3.5);
-    nmLines.slice(0,2).forEach(line=>{
-      doc.text(line,cx2,textY,{align:'center'});
-      textY+=ss(5.5);
-    });
-
-    // Relation
     const rl=a.relation.replace(/ \(.*?\)/,'');
-    doc.setFont('helvetica','normal');doc.setFontSize(Math.max(ss(3.8),3.5));
-    doc.setTextColor(lv?74:201,lv?224:149,lv?128:42);
-    doc.text(rl.substring(0,16).toUpperCase(),cx2,textY,{align:'center'});
-    textY+=ss(4.5);
-
-    // Years
     const yr=fmtY(a.birthYear,a.deathYear);
-    if(yr){
-      doc.setFont('helvetica','italic');doc.setFontSize(Math.max(ss(3.5),3));
-      doc.setTextColor(160,130,80);
-      doc.text(yr,cx2,textY,{align:'center'});
-    }
+    return '<div style="position:absolute;left:'+p.x+'px;top:'+p.y+'px;width:'+NW+'px;height:'+NH+'px;background:#1e0d06;border:2px solid '+(lv?'#4ae080':'#c9952a')+';border-radius:14px;text-align:center;padding:10px 6px;box-sizing:border-box;'+(lv?'box-shadow:0 0 12px rgba(74,224,128,0.25);':'')+'">'
+      +'<div style="display:flex;justify-content:center;margin-bottom:7px">'+av+'</div>'
+      +'<div style="font-family:serif;font-size:12px;font-weight:bold;color:#fefaf2;line-height:1.3;margin-bottom:3px">'+nm+'</div>'
+      +'<div style="font-family:monospace;font-size:9px;color:'+(lv?'#4ae080':'#c9952a')+';letter-spacing:0.5px;margin-bottom:2px">'+rl.substring(0,18).toUpperCase()+'</div>'
+      +(yr?'<div style="font-size:9px;color:#a08060;font-style:italic">'+yr+'</div>':'')
+      +'</div>';
+  }).join('');
 
-    drawn++;
-    setPf(55+Math.round((drawn/total)*35));
-    await sl(20);
-  }
-
-  setPf(94);await sl(50);
-
-  // ── FOOTER ──
-  const pages=doc.getNumberOfPages();
-  for(let p=1;p<=pages;p++){
-    doc.setPage(p);
-    doc.setDrawColor(80,60,20);doc.setLineWidth(0.3);doc.line(MAR,PH-10,PW-MAR,PH-10);
-    doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(120,90,40);
-    doc.text('AncestralMind  •  Designed by Kandregula Krishnamurthy',MAR,PH-6);
-    doc.text('Page '+p+' of '+pages,PW-MAR,PH-6,{align:'right'});
-  }
-
-  setPf(100);await sl(300);
-  const fname=S.ancestors[0]?.name?.split(' ').slice(-1)[0]||'Family';
-  const treeBlob=doc.output('blob');
-  const treeUrl=URL.createObjectURL(treeBlob);
-  hidePdfPg();
-  window.open(treeUrl,'_blank');
-  showToast('📄 PDF opened — use Share to print or save','success');
+  // Open print window
+  const fam=S.ancestors[0]?.name?.split(' ').slice(-1)[0]||'Family';
+  const date=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  const win=window.open('','_blank');
+  if(!win){showToast('Please allow popups to print','error');return;}
+  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+fam+' Family Tree — AncestralMind</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0e0702;color:#fefaf2;font-family:serif;padding:16px}@media print{body{background:white;color:#1a0800}.no-print{display:none!important}}</style></head><body>'
+    +'<div class="no-print" style="background:#261208;border:1px solid #c9952a;border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">'
+    +'<div style="color:#ffd040;font-family:monospace;font-size:13px;letter-spacing:1px">🌳 '+fam+' Family Tree — AncestralMind</div>'
+    +'<button onclick="window.print()" style="background:linear-gradient(135deg,#f0a818,#a07010);border:none;border-radius:8px;color:#0e0702;font-weight:bold;padding:8px 20px;cursor:pointer;font-size:13px">🖨️ Print / Save PDF</button>'
+    +'</div>'
+    +'<div style="text-align:center;margin-bottom:16px"><div style="font-family:serif;font-size:22px;color:#ffd040;letter-spacing:2px;margin-bottom:4px">The '+fam+' Family</div>'
+    +'<div style="font-size:12px;color:#a08060">'+S.ancestors.length+' members  •  '+date+'  •  AncestralMind</div></div>'
+    +'<div style="position:relative;width:'+TW+'px;height:'+TH+'px;margin:0 auto">'
+    +'<svg style="position:absolute;top:0;left:0;width:'+TW+'px;height:'+TH+'px;overflow:visible;pointer-events:none">'+svgGenLbls+svgLines+'</svg>'
+    +nodeHtml
+    +'</div>'
+    +'<div style="text-align:center;margin-top:24px;font-size:10px;color:#7a5a1a;font-family:monospace;letter-spacing:1px">ANCESTRALMIND  •  DESIGNED BY KANDREGULA KRISHNAMURTHY</div>'
+    +'</body></html>');
+  win.document.close();
+  showToast('Tree ready — tap Print / Save PDF','success');
 }
 // ── END TREE PDF ──────────────────────────────────────────
 function renderHome(){
@@ -1213,39 +1088,51 @@ function shareAllWA(aId){const a=S.ancestors.find(x=>x.id===aId);if(!a)return;co
 function copyEntry(aId,wId){const a=S.ancestors.find(x=>x.id===aId),w=a?.wisdomEntries?.find(x=>x.id===wId);if(!a||!w)return;const t=`${a.name} — ${a.relation}\n\n${w.type}\n${w.text||''}\n\n${new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}`;navigator.clipboard?.writeText(t).then(()=>showToast('Copied ✓','success')).catch(()=>showToast('Copy failed','error'));}
 
 // ── PDF ──
-async function exportPDF(aId){
+function exportPDF(aId){
   const a=S.ancestors.find(x=>x.id===aId);if(!a)return;
-  showPdfPg('Generating Report…','Preparing…',5);await sl(100);
-  if(!window.jspdf?.jsPDF){showToast('PDF library loading, please retry','error');hidePdfPg();return;}
-  const {jsPDF}=window.jspdf,doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const PW=210,ML=18,MT=20,UW=PW-ML*2;let y=MT;
-  function chk(n=10){if(y+n>281){doc.addPage();y=MT;}}
-  function sf(st,sz,col=[30,15,5]){doc.setFont('helvetica',st);doc.setFontSize(sz);doc.setTextColor(...col);}
-  function ln(x1,y1,x2,y2,col=[201,149,42],w=0.4){doc.setDrawColor(...col);doc.setLineWidth(w);doc.line(x1,y1,x2,y2);}
-  function wr(txt,x,mw,lh=5.5){doc.splitTextToSize(txt,mw).forEach(l=>{chk(lh);doc.text(l,x,y);y+=lh;});}
-  showPdfPg('Generating Report…','Drawing header…',20);await sl(80);
-  doc.setFillColor(14,7,2);doc.rect(0,0,PW,42,'F');
-  sf('bold',18,[240,200,80]);doc.text('AncestralMind',PW/2,28,{align:'center'});
-  sf('normal',8,[160,130,80]);doc.text('FAMILY WISDOM REPORT',PW/2,36,{align:'center',charSpace:2});
-  y=52;
-  sf('bold',16,[240,200,80]);doc.text(a.name,ML,y);y+=7;
-  sf('normal',10,[200,160,80]);doc.text(`${a.relation}  •  ${fmtY(a.birthYear,a.deathYear)}  •  ${a.status==='living'?'Living':'Departed'}`,ML,y);y+=8;
-  ln(ML,y,PW-ML,y);y+=6;
-  if(a.description){sf('italic',10,[220,190,130]);wr(`"${a.description}"`,ML,UW,6);y+=4;ln(ML,y,PW-ML,y,[60,40,15],0.2);y+=6;}
-  showPdfPg('Generating Report…','Writing entries…',55);await sl(80);
   const en=a.wisdomEntries||[];
-  if(en.length){sf('bold',12,[240,168,24]);doc.text(`Wisdom & Memories  (${en.length})`,ML,y);y+=7;
-    en.forEach((w,i)=>{chk(20);sf('bold',9,[240,168,24]);doc.text(`${String(i+1).padStart(2,'0')}  ${tIcon(w.type)} ${w.type.toUpperCase()}`,ML,y);sf('italic',8,[160,130,80]);doc.text(new Date(w.timestamp).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}),PW-ML,y,{align:'right'});y+=5;ln(ML,y,PW-ML,y,[60,40,15],0.2);y+=5;if(w.text){sf('normal',10,[250,240,220]);wr(w.text,ML,UW,5.5);}y+=5;if(i<en.length-1){ln(ML,y,PW-ML,y,[40,25,8],0.15);y+=3;}});}
-  const tp=doc.getNumberOfPages();for(let p=1;p<=tp;p++){doc.setPage(p);ln(ML,287,PW-ML,287,[80,60,20],0.3);sf('normal',7,[120,90,40]);doc.text(`AncestralMind — Designed by Kandregula Krishnamurthy`,ML,292);doc.text(`Page ${p} of ${tp}`,PW-ML,292,{align:'right'});}
-  showPdfPg('Done!','Downloading…',100);await sl(400);
-  const pdfBlob=doc.output('blob');
-  const pdfUrl=URL.createObjectURL(pdfBlob);
-  hidePdfPg();
-  window.open(pdfUrl,'_blank');
-  showToast('📄 PDF opened — use Share to print or save','success');
+  const lv=a.status==='living';
+  const date=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  const win=window.open('','_blank');
+  if(!win){showToast('Please allow popups to print','error');return;}
+  let entriesHtml='';
+  if(!en.length){entriesHtml='<p style="color:#a08060;font-style:italic">No wisdom entries recorded yet.</p>';}
+  else{en.forEach((w,i)=>{
+    entriesHtml+='<div style="margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid #3a2010">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+      +'<span style="font-family:monospace;font-size:11px;color:#c9952a;letter-spacing:1px">'+String(i+1).padStart(2,"0")+'  '+tIcon(w.type)+' '+w.type.toUpperCase()+'</span>'
+      +'<span style="font-size:11px;color:#7a5a3a;font-style:italic">'+new Date(w.timestamp).toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})+'</span>'
+      +'</div>'
+      +(w.image?'<img src="'+w.image+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-bottom:10px">':'')
+      +(w.text?'<p style="font-size:14px;line-height:1.8;color:#fefaf2;font-style:italic">'+w.text.replace(/\n/g,'<br>')+'</p>':'')
+      +'</div>';
+  });}
+  const avHtml=a.photo
+    ?'<img src="'+a.photo+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #c9952a">'
+    :'<div style="width:80px;height:80px;border-radius:50%;background:rgba(201,149,42,0.2);border:3px solid #c9952a;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;color:#c9952a">'+ini(a.name)+'</div>';
+  win.document.write("<!DOCTYPE html><html><head><meta charset='UTF-8'><title>"+a.name+" — AncestralMind</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0e0702;color:#fefaf2;font-family:Georgia,serif;padding:20px;max-width:680px;margin:0 auto}@media print{body{background:white;color:#1a0800}.no-print{display:none!important}p,div{color:#1a0800!important}}</style></head><body>"
+    +'<div class="no-print" style="background:#1c0d06;border:1px solid #c9952a;border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center">'
+    +'<span style="color:#ffd040;font-size:13px;font-family:monospace">AncestralMind — Family Wisdom Report</span>'
+    +'<button onclick="window.print()" style="background:linear-gradient(135deg,#f0a818,#a07010);border:none;border-radius:8px;color:#0e0702;font-weight:bold;padding:8px 18px;cursor:pointer;font-size:13px">🖨️ Print / Save PDF</button>'
+    +'</div>'
+    +'<div style="background:#1c0d06;border:1px solid #c9952a;border-radius:14px;padding:20px;margin-bottom:20px">'
+    +'<div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">'+avHtml
+    +'<div><div style="font-size:22px;color:#ffd040;font-family:Georgia,serif;margin-bottom:4px">'+a.name+'</div>'
+    +'<div style="font-size:13px;color:#c9952a;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px">'+a.relation+'</div>'
+    +'<div style="font-size:12px;color:#a08060;font-style:italic">'+fmtY(a.birthYear,a.deathYear)+'&nbsp;&nbsp;'+(lv?"🌱 Living":"⚰ Departed")+'</div>'
+    +'</div></div>'
+    +(a.description?'<div style="font-style:italic;color:#e0c090;font-size:14px;line-height:1.8;border-top:1px solid #3a2010;padding-top:12px">"'+a.description+'"</div>':'')
+    +'</div>'
+    +'<div style="font-family:monospace;font-size:13px;color:#ffd040;letter-spacing:2px;margin-bottom:14px">WISDOM &amp; MEMORIES  ('+en.length+')</div>'
+    +entriesHtml
+    +'<div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid #3a2010;font-size:10px;color:#7a5a1a;letter-spacing:1px">ANCESTRALMIND  •  DESIGNED BY KANDREGULA KRISHNAMURTHY</div>'
+    +'</body></html>');
+  win.document.close();
+  showToast('Report ready — tap Print / Save PDF','success');
 }
-function showPdfPg(t,s,p){document.getElementById('pdfOvT').textContent=t;document.getElementById('pdfOvS').textContent=s;document.getElementById('pdfBarF').style.width=p+'%';document.getElementById('pdfOv').classList.add('show');}
-function hidePdfPg(){document.getElementById('pdfOv').classList.remove('show');}
+function showPdfPg(t,s,p){}
+function hidePdfPg(){}
+
 
 // ── SAMPLE DATA ──
 function loadSample(){
