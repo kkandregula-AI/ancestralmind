@@ -657,23 +657,9 @@ footer{text-align:center;padding:28px 20px 36px;border-top:1px solid var(--br);m
   <div style="margin-top:12px;font-size:11px;color:var(--cd);letter-spacing:1px;font-family:var(--fd)">Krishnamurthy Kandregula Innovation Lab</div>
 </footer>
 
-<!-- WALKTHROUGH OVERLAY -->
-<div class="wt-overlay" id="wtOverlay">
-  <div class="wt-backdrop" onclick="wtSkip()"></div>
-  <div class="wt-card">
-    <div class="wt-dots" id="wtDots"></div>
-    <div class="wt-step-pill" id="wtPill">STEP 1 OF 6</div>
-    <div class="wt-title" id="wtTitle"></div>
-    <div class="wt-desc" id="wtDesc"></div>
-    <div class="wt-highlight" id="wtHighlight">
-      <div class="wt-highlight-icon" id="wtIcon"></div>
-      <div class="wt-highlight-text" id="wtHText"></div>
-    </div>
-    <div class="wt-btns">
-      <button class="wt-skip" onclick="wtSkip()">Exit Tour</button>
-      <button class="wt-next" id="wtNextBtn" onclick="wtNext()">Next →</button>
-    </div>
-  </div>
+<!-- TOUR OVERLAY -->
+<div id="tourOverlay" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.6);align-items:flex-end;justify-content:center">
+  <div id="tourCard" style="background:#1C0D06;border:1px solid var(--br);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:600px;text-align:center;animation:slideUp 0.3s ease"></div>
 </div>
 <!-- DEMO MODE BAR -->
 <div class="demo-bar" id="demoBar">
@@ -1216,120 +1202,93 @@ let tT;
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${type}`;clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),2800);}
 
 // ── WALKTHROUGH / FEATURE TOUR ──────────────────────────
-const WT_STEPS=[
-  {
-    title:'Welcome to AncestralMind',
-    desc:'This quick tour shows every feature using a sample family. Nothing is saved — your data stays empty until you add your own ancestors.',
-    icon:'🕯️',
-    htext:'5 features to explore: Wisdom Vault, Oracle Chat, Photo Enhancement, Family Tree, and PDF Export.',
-    action:null,
-    next:'Next →'
-  },
-  {
-    title:'Family Tree View',
-    desc:'Your family is visualised across generations. Green border = Living. Gold border = Departed. Tap any node to open their profile.',
-    icon:'🌳',
-    htext:'Connector lines show parent-child links. Print the full tree as a PDF using the 📄 Print button.',
-    action:()=>openTree(),
-    next:'Open Tree →'
-  },
-  {
-    title:'Ancestor Profile & Wisdom Vault',
-    desc:'Each ancestor has a profile with Wisdom, Oracle, and Gallery tabs. The Wisdom tab holds all their stories, sayings, and lessons.',
-    icon:'📜',
-    htext:'Add stories, life lessons, sayings, beliefs, memories — with text and photos. Share each entry via WhatsApp or copy to clipboard.',
-    action:()=>{closeTree();const a=S.ancestors[2];if(a){openAnc(a.id);switchTab('w');}},
-    next:'Open Wisdom →'
-  },
-  {
-    title:'Oracle Chat — Talk to Your Ancestor',
-    desc:'The Oracle tab lets you have real conversations with your ancestor, powered by Claude AI. Their responses draw from the wisdom you recorded.',
-    icon:'🔮',
-    htext:'Requires an Anthropic API key (free to start). The AI speaks in their voice, personality, and cultural tone.',
-    action:()=>switchTab('o'),
-    next:'See Oracle →'
-  },
-  {
-    title:'Photo Enhancement Studio',
-    desc:'Every photo you upload is automatically analysed. Blurry photos are enhanced instantly. B&W photos can be AI-colorized with historically accurate colors.',
-    icon:'📸',
-    htext:'Before/After slider to compare. Save the enhanced photo directly to your device. Works fully offline — no AI needed.',
-    action:null,
-    next:'Next →'
-  },
-  {
-    title:'PDF Family Report & Export',
-    desc:'Export a full PDF report of any ancestor\'s wisdom, or print the entire Family Tree as a visual PDF. Opens in your browser\'s Share Sheet — Print, Save to Files, or AirDrop.',
-    icon:'📄',
-    htext:'Tap Share → Print on iOS for a physical printout. Or Save to Files to keep a permanent copy.',
-    action:null,
-    next:'Start My Family →'
-  }
-];
-
-let wtStep=0;
 let wtDemoLoaded=false;
 
 function startWalkthrough(){
-  // Load sample data silently for demo
-  if(!S.ancestors.length){
-    const pid=gid(),fid=gid();
-    S.ancestors=[
-      {id:pid,name:'Venkata Rao Kandregula',relation:'Great-Grandfather',language:'Telugu',birthYear:'1895',deathYear:'1968',status:'expired',generation:1,parentId:null,description:'A principled patriarch.',photo:null,wisdomEntries:[{id:gid(),type:'Saying',text:'When water is scarce, the field trusts the rain will come.',timestamp:Date.now()-86400000*40},{id:gid(),type:'Life Lesson',text:'Never borrow money to celebrate. Celebrate when the harvest comes in.',timestamp:Date.now()-86400000*20}]},
-      {id:gid(),name:'Subbamma Kandregula',relation:'Great-Grandmother',language:'Telugu',birthYear:'1900',deathYear:'1975',status:'expired',generation:1,parentId:null,description:'The matriarch.',photo:null,wisdomEntries:[{id:gid(),type:'Belief',text:'The kitchen is the soul of the house.',timestamp:Date.now()-86400000*30}]},
-      {id:fid,name:'Krishnamurthy Rao',relation:'Grandfather (Thatha)',language:'Telugu',birthYear:'1928',deathYear:'1992',status:'expired',generation:2,parentId:pid,description:'Farmer and teacher. Loved Carnatic music.',photo:null,wisdomEntries:[{id:gid(),type:'Story',text:'During the drought of 1953 he stayed when others left. The land fed my father. I will not leave it when it is hungry.',timestamp:Date.now()-86400000*15}]},
-      {id:gid(),name:'Your Father',relation:'Father (Nanna)',language:'Telugu',birthYear:'1958',deathYear:null,status:'living',generation:3,parentId:fid,description:'Add your own story here.',photo:null,wisdomEntries:[]},
-    ];
-    S.isSample=true;S.chatH={};wtDemoLoaded=true;
+  try{
+    // Load sample data
+    if(!S.ancestors.length){
+      const pid=gid(),fid=gid();
+      S.ancestors=[
+        {id:pid,name:'Venkata Rao Kandregula',relation:'Great-Grandfather',language:'Telugu',birthYear:'1895',deathYear:'1968',status:'expired',generation:1,parentId:null,description:'A principled patriarch who rose before sunrise every day.',photo:null,wisdomEntries:[
+          {id:gid(),type:'Saying',text:'When water is scarce, the field trusts the rain will come. Worry is the drought you bring upon yourself.',timestamp:Date.now()-86400000*40},
+          {id:gid(),type:'Life Lesson',text:'Never borrow money to celebrate. Celebrate when the harvest comes in, not when it is still in the ground.',timestamp:Date.now()-86400000*20}
+        ]},
+        {id:gid(),name:'Subbamma Kandregula',relation:'Great-Grandmother',language:'Telugu',birthYear:'1900',deathYear:'1975',status:'expired',generation:1,parentId:null,description:'The matriarch. Known for her cooking and herbal wisdom.',photo:null,wisdomEntries:[
+          {id:gid(),type:'Belief',text:'The kitchen is the soul of the house. Cook only when your heart is calm.',timestamp:Date.now()-86400000*30}
+        ]},
+        {id:fid,name:'Krishnamurthy Rao',relation:'Grandfather (Thatha)',language:'Telugu',birthYear:'1928',deathYear:'1992',status:'expired',generation:2,parentId:pid,description:'Farmer and teacher. Loved Carnatic music and jasmine flowers.',photo:null,wisdomEntries:[
+          {id:gid(),type:'Story',text:'During the drought of 1953, when others left, he stayed. He mortgaged his gold ring to buy seeds. The land fed my father — I will not leave it when it is hungry.',timestamp:Date.now()-86400000*15},
+          {id:gid(),type:'Memory',text:'Every Sankranti morning he would draw the first kolam himself. "The first welcome of the new year should come from the man of the house."',timestamp:Date.now()-86400000*5}
+        ]},
+        {id:gid(),name:'Your Father',relation:'Father (Nanna)',language:'Telugu',birthYear:'1958',deathYear:null,status:'living',generation:3,parentId:fid,description:'Add your own story here.',photo:null,wisdomEntries:[]}
+      ];
+      S.isSample=true;S.chatH={};wtDemoLoaded=true;
+    }
     renderHome();
+    // Show demo banner
+    const db=document.getElementById('demoBar');
+    if(db)db.classList.add('show');
+    // Show the walk-through card
+    showTourCard(0);
+  }catch(err){
+    console.warn('Tour error:',err);
+    // Fallback: just show the sample grid
+    renderHome();
+    showToast('Sample loaded — explore freely!','success');
   }
-  wtStep=0;
-  document.getElementById('demoBar').classList.add('show');
-  showWtStep(0);
 }
 
-function showWtStep(n){
-  const step=WT_STEPS[n];
-  const total=WT_STEPS.length;
-  // Dots
-  const dotsEl=document.getElementById('wtDots');
-  dotsEl.innerHTML=WT_STEPS.map((_,i)=>'<div class="wt-dot'+(i===n?' act':'')+'"></div>').join('');
-  document.getElementById('wtPill').textContent='STEP '+(n+1)+' OF '+total;
-  document.getElementById('wtTitle').textContent=step.title;
-  document.getElementById('wtDesc').textContent=step.desc;
-  document.getElementById('wtIcon').textContent=step.icon;
-  document.getElementById('wtHText').textContent=step.htext;
-  document.getElementById('wtNextBtn').textContent=step.next;
-  // Run nav action
-  if(step.action)step.action();
-  // Show overlay
-  document.getElementById('wtOverlay').classList.add('show');
+const TOUR=[
+  {icon:'🌳',title:'Family Tree',desc:'Tap "View Family Tree" to see all generations connected visually. Green = Living, Gold = Departed. Tap any node to open their profile.',btn:'View Tree'},
+  {icon:'📜',title:'Wisdom Vault',desc:'Inside each ancestor\'s profile, the Wisdom tab holds all their stories, sayings, life lessons, and memories. You can add photos too.',btn:'Open Ancestor'},
+  {icon:'🔮',title:'Oracle Chat — AI',desc:'The Oracle tab lets you have real conversations with your ancestor powered by Claude AI. Connect your API key to unlock this.',btn:'See Oracle'},
+  {icon:'📸',title:'Photo Enhancement',desc:'Upload any photo — blurry photos are auto-fixed. B&W photos can be AI-colorized. Save enhanced photos directly to your device.',btn:'Next'},
+  {icon:'📄',title:'PDF & WhatsApp Share',desc:'Export a family wisdom report or print the full Family Tree. Share any wisdom entry directly to WhatsApp.',btn:'Start My Family'}
+];
+let tourStep=0;
+
+function showTourCard(n){
+  tourStep=n;
+  const t=TOUR[n];
+  // Build card HTML
+  const dots=TOUR.map((_,i)=>'<div style="width:'+(i===n?18:6)+'px;height:6px;border-radius:3px;background:'+(i===n?'var(--go)':'rgba(240,168,24,0.25)')+';transition:all 0.3s"></div>').join('');
+  const card=document.getElementById('tourCard');
+  if(!card)return;
+  card.innerHTML=
+    '<div style="display:flex;justify-content:center;gap:6px;margin-bottom:14px">'+dots+'</div>'
+    +'<div style="font-size:11px;font-family:var(--fd);letter-spacing:2px;color:var(--go);margin-bottom:10px">STEP '+(n+1)+' OF '+TOUR.length+'</div>'
+    +'<div style="font-size:32px;margin-bottom:10px">'+t.icon+'</div>'
+    +'<div style="font-family:var(--fd);font-size:18px;color:var(--gl);letter-spacing:1px;margin-bottom:10px">'+t.title+'</div>'
+    +'<div style="font-size:14px;color:var(--cs);line-height:1.8;margin-bottom:20px">'+t.desc+'</div>'
+    +'<div style="display:flex;gap:10px">'
+    +'<button onclick="exitTour()" style="padding:12px 18px;background:none;border:1px solid rgba(240,168,24,0.3);border-radius:12px;color:var(--cd);font-family:var(--fb);font-size:13px;cursor:pointer">Exit Tour</button>'
+    +'<button onclick="tourAction('+n+')" style="flex:1;padding:13px;background:linear-gradient(135deg,var(--go),#A07010);border:none;border-radius:12px;color:#0E0702;font-family:var(--fd);font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px">'+t.btn+' →</button>'
+    +'</div>';
+  const overlay=document.getElementById('tourOverlay');
+  if(overlay)overlay.style.display='flex';
 }
 
-function wtNext(){
-  document.getElementById('wtOverlay').classList.remove('show');
-  wtStep++;
-  if(wtStep>=WT_STEPS.length){
-    // Tour complete
-    exitDemo();
-    showToast('Tour complete! Now add your own family. ✦','success');
-    return;
-  }
-  setTimeout(()=>showWtStep(wtStep),300);
+function tourAction(n){
+  const overlay=document.getElementById('tourOverlay');
+  if(overlay)overlay.style.display='none';
+  if(n===0){openTree();}
+  else if(n===1){closeTree();if(S.ancestors[2])openAnc(S.ancestors[2].id);}
+  else if(n===2){if(S.ancestors[2])openAnc(S.ancestors[2].id);switchTab('o');}
+  else if(n===3){if(n+1<TOUR.length)setTimeout(()=>showTourCard(n+1),200);}
+  else{exitTour();openAddAncMo();}
+  if(n<TOUR.length-1&&n!==3)setTimeout(()=>showTourCard(n+1),800);
 }
 
-function wtSkip(){
-  document.getElementById('wtOverlay').classList.remove('show');
-  exitDemo();
-}
-
-function exitDemo(){
-  document.getElementById('wtOverlay').classList.remove('show');
-  document.getElementById('demoBar').classList.remove('show');
+function exitTour(){
+  const overlay=document.getElementById('tourOverlay');
+  if(overlay)overlay.style.display='none';
+  const db=document.getElementById('demoBar');
+  if(db)db.classList.remove('show');
   if(wtDemoLoaded){
     S.ancestors=[];S.chatH={};S.isSample=false;wtDemoLoaded=false;
     saveS();goHome();
-    showToast('Demo exited — ready to add your family','success');
+    showToast('Demo exited — add your own family!','success');
   }else{
     goHome();
   }
