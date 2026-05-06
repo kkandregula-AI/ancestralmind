@@ -98,6 +98,8 @@ body{background:#0E0702;background-color:#0E0702;color:#FEFAF2;color:var(--cr);f
 .apib.conn{border-color:rgba(192,128,255,0.7);background:rgba(112,64,184,0.15)}
 
 /* SCREENS */
+#gridView{display:none}
+#obView{display:block}
 .scr{display:none;padding:0 0 100px;background:#0E0702;background:var(--bd)}.scr.act{display:block}
 
 /* HOME / ONBOARDING */
@@ -370,7 +372,7 @@ footer{text-align:center;padding:28px 20px 36px;border-top:1px solid var(--br);m
 
 <!-- HOME -->
 <div class="scr act" id="homeScr">
-  <div id="obView" style="display:none">
+  <div id="obView">
     <div class="ob-hero">
       <span class="ob-flame">🕯️</span>
       <div class="ob-title">AncestralMind</div>
@@ -875,11 +877,19 @@ async function exportTreePDF(){
 }
 // ── END TREE PDF ──────────────────────────────────────────
 function renderHome(){
-  const ob=document.getElementById('obView'),gv=document.getElementById('gridView');
-  document.getElementById('appFooter').style.display='block';
-  if(!S.ancestors.length){ob.style.display='block';gv.style.display='none';return;}
-  ob.style.display='none';gv.style.display='block';
-  // Show sample hint on home grid if sample data is loaded
+  const ob=document.getElementById('obView');
+  const gv=document.getElementById('gridView');
+  const ft=document.getElementById('appFooter');
+  if(ft)ft.style.display='block';
+  if(!ob||!gv)return;
+  if(!S.ancestors||!S.ancestors.length){
+    ob.style.display='block';
+    gv.style.display='none';
+    return;
+  }
+  ob.style.display='none';
+  gv.style.display='block';
+  // Show sample hint
   const existingHint=document.getElementById('homeSmplHint');
   if(S.isSample&&!existingHint){
     const hint=document.createElement('div');
@@ -887,23 +897,26 @@ function renderHome(){
     hint.style.cssText='margin:0 16px 12px;padding:12px 14px;background:rgba(112,64,184,0.12);border:1px solid rgba(192,128,255,0.3);border-radius:10px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--cs)';
     hint.innerHTML='<span style="font-size:20px">👋</span><div><strong style="color:var(--al);font-family:var(--fd);font-size:11px;letter-spacing:1px;display:block;margin-bottom:3px">SAMPLE DATA LOADED</strong>Add your real family members, then view tree and clear the sample.</div>';
     const grid=document.getElementById('ancGrid');
-    grid.parentNode.insertBefore(hint,grid);
+    if(grid&&grid.parentNode)grid.parentNode.insertBefore(hint,grid);
   }else if(!S.isSample&&existingHint){
     existingHint.remove();
   }
-  const g=document.getElementById('ancGrid');let h='';
+  const g=document.getElementById('ancGrid');
+  if(!g)return;
+  let h='';
   S.ancestors.forEach((a,i)=>{
     const wc=(a.wisdomEntries||[]).length,lv=a.status==='living';
     const sb=lv?'<span class="status-living">Living</span>':'<span class="status-expired"></span>';
-    h+=`<div class="ac2 ${lv?'living':''}" onclick="openAnc('${a.id}')" style="animation-delay:${i*.07}s">
-      ${wc?`<div class="abd">${wc} 📜</div>`:''}
-      <div class="aav">${a.photo?`<img src="${a.photo}">`:`<div class="ini">${ini(a.name)}</div>`}</div>
-      <div class="an">${a.name}</div><div class="ar">${a.relation}</div>
-      <div class="ay">${fmtY(a.birthYear,a.deathYear)}</div>
-      <div style="text-align:center;margin-top:6px">${sb}</div>
-    </div>`;
+    h+='<div class="ac2 '+(lv?'living':'')+'" data-id="'+a.id+'" onclick="openAnc(this.dataset.id)" style="animation-delay:'+(i*.07)+'s">'
+      +(wc?'<div class="abd">'+wc+' 📜</div>':'')
+      +'<div class="aav">'+(a.photo?'<img src="'+a.photo+'">':`<div class="ini">${ini(a.name)}</div>`)+'</div>'
+      +'<div class="an">'+a.name+'</div>'
+      +'<div class="ar">'+a.relation+'</div>'
+      +'<div class="ay">'+fmtY(a.birthYear,a.deathYear)+'</div>'
+      +'<div style="text-align:center;margin-top:6px">'+sb+'</div>'
+      +'</div>';
   });
-  h+=`<div class="aac" onclick="openAddAncMo()"><div class="pl">+</div><span>Add Member</span><span class="bfree" style="margin-top:6px">FREE</span></div>`;
+  h+='<div class="aac" onclick="openAddAncMo()"><div class="pl">+</div><span>Add Member</span><span class="bfree" style="margin-top:6px">FREE</span></div>';
   g.innerHTML=h;
 }
 
