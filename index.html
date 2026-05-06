@@ -689,12 +689,26 @@ const CVS=document.getElementById('cvs'),CVS2=document.getElementById('cvs2');
 const CX=CVS.getContext('2d'),CX2=CVS2.getContext('2d');
 
 function init(){
-  loadS();regSW();
-  // Ensure homeScr is active on load
-  document.getElementById('homeScr').classList.add('act');
-  document.getElementById('detScr').classList.remove('act');
-  document.getElementById('treeScr').classList.remove('act');
-  renderHome();updApiBtn();initSlider();
+  try{loadS();}catch(e){}
+  // Render immediately — never block on anything
+  try{
+    document.getElementById('homeScr').classList.add('act');
+    document.getElementById('detScr').classList.remove('act');
+    document.getElementById('treeScr').classList.remove('act');
+  }catch(e){}
+  try{renderHome();}catch(e){console.warn('renderHome:',e);}
+  try{updApiBtn();}catch(e){}
+  try{initSlider();}catch(e){}
+  try{regSW();}catch(e){}
+}
+function regSW(){
+  // Service workers only work on https:// and localhost, not file://
+  try{
+    if(!('serviceWorker'in navigator))return;
+    if(location.protocol==='file:')return;
+    const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('fetch',()=>{});`;
+    navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
+  }catch(e){}
 }
 function loadS(){try{const s=localStorage.getItem('am9');if(s){const d=JSON.parse(s);if(d&&Array.isArray(d.ancestors)){Object.assign(S,d);S.isSample=d.isSample||false;}}}catch(e){}S.chatH=S.chatH||{};S.apiKey=localStorage.getItem('amk')||'';}
 function saveS(){localStorage.setItem('am9',JSON.stringify({ancestors:S.ancestors,chatH:S.chatH,isSample:S.isSample||false}));}
